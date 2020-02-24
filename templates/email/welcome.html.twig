@@ -1,0 +1,54 @@
+{% extends 'email/emailBase.html.twig' %}
+
+{% block content %}
+    <row class="welcome">
+        <columns>
+            <spacer size="35"></spacer>
+            <h1>
+                <center>
+                    Nice to meet you {{ email.toName }}!
+                </center>
+            </h1>
+            <spacer size="10"></spacer>
+        </columns>
+    </row>
+    <spacer size="30"></spacer>
+    <row>
+        <columns>
+            <p>
+                Welcome to <strong>the Space Bar</strong>, we can't wait to read what you have to write.
+                Get started on your first article and connect with the space bar community.
+            </p>
+        </columns>
+    </row>
+    <row>
+        <columns>
+            <center>
+                <button href="{{ url('admin_article_new') }}">Get writing!</button>
+            </center>
+        </columns>
+    </row>
+    <row>
+        <columns>
+            <p>
+                Check out our existing articles and share your thoughts in the comments!
+            </p>
+        </columns>
+    </row>
+    <row>
+        <columns>
+            <center>
+                <button href="{{ url('app_homepage') }}">Get reading!</button>
+            </center>
+        </columns>
+    </row>
+    <row>
+        <columns>
+            <p>
+                We're so excited that you've decided to join us in our corner of the universe,
+                it's a friendly one with other creative and insightful writers just like you!
+                Need help from a friend? We're always just a message away.
+            </p>
+        </columns>
+    </row>
+{% endblock %}

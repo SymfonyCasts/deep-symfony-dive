@@ -1,0 +1,19 @@
+# Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/tree/master/Resources/doc/index.md
+oneup_flysystem:
+    cache:
+        psr6_app_cache:
+            psr6:
+                service: cache.flysystem.psr6
+
+    adapters:
+        uploads_adapter:
+            local:
+                directory: "%kernel.project_dir%/public/uploads"
+
+    filesystems:
+        uploads_filesystem:
+            adapter: uploads_adapter
+
+        cached_uploads_filesystem:
+            adapter: uploads_adapter
+            cache: psr6_app_cache

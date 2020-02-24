@@ -1,0 +1,33 @@
+body {
+    position: relative;
+    background: $lightgray;
+    min-height: 45rem;
+    padding-bottom: 80px;
+}
+
+html {height:100%}
+
+/* NAVIGATION */
+
+.navbar-bg {
+    background: url('../../images/space-nav.jpg');
+    background-size: 80%;
+}
+
+.dropdown-menu, .dropdown-menu.show {
+    right: 0;
+}
+
+.space-brand {
+    color: #fff;
+    font-weight: bold;
+}
+
+.nav-profile-img {
+    width: 50px;
+    border: 1px solid #fff;
+}
+
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    color: #efefee;
+}

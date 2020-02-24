@@ -1,0 +1,40 @@
+{% extends 'content_base.html.twig' %}
+
+{% block content_body %}
+    <h1>Edit the Article! 🚀</h1>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <h3>Details</h3>
+            {{ include('article_admin/_form.html.twig', {
+                button_text: 'Update!'
+            }) }}
+        </div>
+        <div class="col-sm-4">
+            <h3>References</h3>
+
+            <ul class="list-group small js-reference-list" data-url="{{ path('admin_article_list_references', {id: article.id}) }}"></ul>
+
+            <hr>
+
+            <form action="{{ path('admin_article_add_reference', {
+                id: article.id
+            }) }}" method="POST" enctype="multipart/form-data" class="dropzone js-reference-dropzone">
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {{ encore_entry_link_tags('admin_article_form') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('admin_article_form') }}
+{% endblock %}

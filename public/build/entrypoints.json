@@ -1,0 +1,64 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~admin_article_form~app~article_show.js",
+        "/build/vendors~admin_article_form~app.js",
+        "/build/vendors~app.js",
+        "/build/app.js"
+      ],
+      "css": [
+        "/build/app.css"
+      ]
+    },
+    "article_show": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~admin_article_form~app~article_show.js",
+        "/build/article_show.js"
+      ],
+      "css": [
+        "/build/article_show.css"
+      ]
+    },
+    "admin_article_form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~admin_article_form~app~article_show.js",
+        "/build/vendors~admin_article_form~app.js",
+        "/build/vendors~admin_article_form.js",
+        "/build/admin_article_form.js"
+      ],
+      "css": [
+        "/build/vendors~admin_article_form.css"
+      ]
+    },
+    "account": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/account.css"
+      ]
+    },
+    "login": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/login.css"
+      ]
+    },
+    "email": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~email.js"
+      ],
+      "css": [
+        "/build/vendors~email.css",
+        "/build/email.css"
+      ]
+    }
+  }
+}

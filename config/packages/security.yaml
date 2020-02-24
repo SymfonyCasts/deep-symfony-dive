@@ -1,0 +1,67 @@
+security:
+    encoders:
+        legacy_bcrypt:
+            algorithm: bcrypt
+
+        App\Entity\User:
+            algorithm: sodium
+            migrate_from:
+                # allow existing bcrypt accounts to log in
+                # and migrate to sodium
+                - legacy_bcrypt
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_ADMIN_COMMENT, ROLE_ADMIN_ARTICLE, ROLE_ALLOWED_TO_SWITCH]
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: lazy
+
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+                    - App\Security\ApiTokenAuthenticator
+
+                # redirect anonymous users to the login page
+                entry_point: App\Security\LoginFormAuthenticator
+
+            logout:
+                path: app_logout
+
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 2592000 # 30 days in seconds
+
+            switch_user: true
+
+            # activate different ways to authenticate
+
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # but, definitely allow /login to be accessible anonymously
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # require the user to fully login to change password
+        #- { path: ^/change-password, roles: IS_AUTHENTICATED_FULLY }
+        # if you wanted to force EVERY URL to be protected
+        #- { path: ^/, roles: IS_AUTHENTICATED_REMEMBERED }
+
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }

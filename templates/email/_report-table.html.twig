@@ -1,0 +1,14 @@
+<table class="table table-striped">
+    <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Comments</th>
+    </tr>
+    {% for article in articles %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ article.title }}</td>
+            <td>{{ article.comments|length }}</td>
+        </tr>
+    {% endfor %}
+</table>

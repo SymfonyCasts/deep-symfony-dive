@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Symfony\Component\Mailer\EventListener\EnvelopeListener:
+        arguments:
+            - null
+            - ['%env(DEV_MAIL_RECIPIENT)%']
