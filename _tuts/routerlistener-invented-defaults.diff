@@ -1,0 +1,9 @@
+diff --git a/config/routes.yaml b/config/routes.yaml
+index 806e7ea..71a69a2 100644
+--- a/config/routes.yaml
++++ b/config/routes.yaml
+@@ -3,3 +3,4 @@ index:
+     defaults:
+         _controller: App\Controller\DefaultController::index
+         id: 10
++        totally_inventing_this_default: true

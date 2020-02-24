@@ -1,0 +1,25 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 1b55770..e7f711e 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -3,11 +3,19 @@
+ namespace App\EventListener;
+ 
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
++use Symfony\Component\HttpKernel\Event\RequestEvent;
+ 
+ class UserAgentSubscriber implements EventSubscriberInterface
+ {
++    public function onKernelRequest()
++    {
++        dd('it\'s alive!!!');
++    }
++
+     public static function getSubscribedEvents()
+     {
+-        
++        return [
++            RequestEvent::class => 'onKernelRequest'
++        ];
+     }
+ }

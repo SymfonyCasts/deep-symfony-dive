@@ -1,0 +1,13 @@
+diff --git a/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php b/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php
+index 43dbf0d..4ffb8c9 100644
+--- a/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php
++++ b/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php
+@@ -52,8 +52,6 @@ final class ServiceValueResolver implements ArgumentValueResolverInterface
+             $controller = substr($controller, 0, $i).strtolower(substr($controller, $i));
+         }
+ 
+-        dd($controller, $this->container, $this->container->get($controller));
+-
+         return $this->container->has($controller) && $this->container->get($controller)->has($argument->getName());
+     }
+ 

@@ -1,0 +1,26 @@
+diff --git a/src/Service/IsMacArgumentValueResolver.php b/src/Service/IsMacArgumentValueResolver.php
+new file mode 100644
+index 0000000..b87c4d9
+--- /dev/null
++++ b/src/Service/IsMacArgumentValueResolver.php
+@@ -0,0 +1,20 @@
++<?php
++
++namespace App\Service;
++
++use Symfony\Component\HttpFoundation\Request;
++use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
++use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
++
++class IsMacArgumentValueResolver implements ArgumentValueResolverInterface
++{
++    public function supports(Request $request, ArgumentMetadata $argument)
++    {
++        // TODO: Implement supports() method.
++    }
++
++    public function resolve(Request $request, ArgumentMetadata $argument)
++    {
++        // TODO: Implement resolve() method.
++    }
++}

@@ -1,0 +1,17 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 9aa2463..1209159 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -17,8 +17,10 @@ class UserAgentSubscriber implements EventSubscriberInterface
+ 
+     public function onKernelRequest(RequestEvent $event)
+     {
+-        dd($event);
+-        $this->logger->info('I\'m logging SUPER early on the request!');
++        $request = $event->getRequest();
++
++        $userAgent = $request->headers->get('User-Agent');
++        $this->logger->info(sprintf('The User-Agent is "%s"', $userAgent));
+     }
+ 
+     public static function getSubscribedEvents()

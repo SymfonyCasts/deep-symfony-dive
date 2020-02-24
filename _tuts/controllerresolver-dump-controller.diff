@@ -1,0 +1,12 @@
+diff --git a/vendor/symfony/http-kernel/Controller/ControllerResolver.php b/vendor/symfony/http-kernel/Controller/ControllerResolver.php
+index b5bd403..e7148e4 100644
+--- a/vendor/symfony/http-kernel/Controller/ControllerResolver.php
++++ b/vendor/symfony/http-kernel/Controller/ControllerResolver.php
+@@ -43,6 +43,7 @@ class ControllerResolver implements ControllerResolverInterface
+             return false;
+         }
+ 
++        dd($controller);
+         if (\is_array($controller)) {
+             if (isset($controller[0]) && \is_string($controller[0]) && isset($controller[1])) {
+                 try {

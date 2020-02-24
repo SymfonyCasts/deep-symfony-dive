@@ -1,0 +1,15 @@
+diff --git a/vendor/symfony/http-kernel/HttpKernel.php b/vendor/symfony/http-kernel/HttpKernel.php
+index 39289be..04b3183 100644
+--- a/vendor/symfony/http-kernel/HttpKernel.php
++++ b/vendor/symfony/http-kernel/HttpKernel.php
+@@ -118,10 +118,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
+ 
+         // request
+         $event = new RequestEvent($this, $request, $type);
+-        dump($request->attributes->all());
+         $this->dispatcher->dispatch($event, KernelEvents::REQUEST);
+-        dump($request->attributes->all());
+-        die;
+ 
+         if ($event->hasResponse()) {
+             return $this->filterResponse($event->getResponse(), $request, $type);

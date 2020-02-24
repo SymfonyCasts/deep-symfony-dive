@@ -1,0 +1,12 @@
+diff --git a/vendor/symfony/error-handler/Resources/views/exception_full.html.php b/vendor/symfony/error-handler/Resources/views/exception_full.html.php
+index 4d46d59..aeb6ea3 100644
+--- a/vendor/symfony/error-handler/Resources/views/exception_full.html.php
++++ b/vendor/symfony/error-handler/Resources/views/exception_full.html.php
+@@ -33,6 +33,7 @@
+             </header>
+         <?php } ?>
+ 
++        I'm inside your exception page!
+         <?= $this->include('views/exception.html.php', $context); ?>
+ 
+         <script>

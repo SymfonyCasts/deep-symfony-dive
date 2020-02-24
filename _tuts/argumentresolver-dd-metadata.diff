@@ -1,0 +1,12 @@
+diff --git a/vendor/symfony/http-kernel/Controller/ArgumentResolver.php b/vendor/symfony/http-kernel/Controller/ArgumentResolver.php
+index 43bbe17..046849a 100644
+--- a/vendor/symfony/http-kernel/Controller/ArgumentResolver.php
++++ b/vendor/symfony/http-kernel/Controller/ArgumentResolver.php
+@@ -48,6 +48,7 @@ final class ArgumentResolver implements ArgumentResolverInterface
+         $arguments = [];
+ 
+         foreach ($this->argumentMetadataFactory->createArgumentMetadata($controller) as $metadata) {
++            dd($metadata);
+             foreach ($this->argumentValueResolvers as $resolver) {
+                 if (!$resolver->supports($request, $metadata)) {
+                     continue;

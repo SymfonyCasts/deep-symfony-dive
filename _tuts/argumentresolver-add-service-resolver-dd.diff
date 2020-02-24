@@ -1,0 +1,12 @@
+diff --git a/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php b/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php
+index 4ffb8c9..772f0d0 100644
+--- a/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php
++++ b/vendor/symfony/http-kernel/Controller/ArgumentResolver/ServiceValueResolver.php
+@@ -36,6 +36,7 @@ final class ServiceValueResolver implements ArgumentValueResolverInterface
+      */
+     public function supports(Request $request, ArgumentMetadata $argument): bool
+     {
++        dd($argument);
+         $controller = $request->attributes->get('_controller');
+ 
+         if (\is_array($controller) && \is_callable($controller, true) && \is_string($controller[0])) {

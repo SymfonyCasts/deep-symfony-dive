@@ -1,0 +1,12 @@
+diff --git a/vendor/symfony/http-kernel/Controller/ErrorController.php b/vendor/symfony/http-kernel/Controller/ErrorController.php
+index b6c4401..2a7b724 100644
+--- a/vendor/symfony/http-kernel/Controller/ErrorController.php
++++ b/vendor/symfony/http-kernel/Controller/ErrorController.php
+@@ -38,6 +38,7 @@ class ErrorController
+ 
+     public function __invoke(\Throwable $exception): Response
+     {
++        dd($this->errorRenderer);
+         $exception = $this->errorRenderer->render($exception);
+ 
+         return new Response($exception->getAsString(), $exception->getStatusCode(), $exception->getHeaders());

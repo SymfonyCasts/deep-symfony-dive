@@ -1,0 +1,250 @@
+{
+    "steps": [
+        {
+            "id": "start",
+            "name": "start",
+            "description": null
+        },
+        {
+            "id": "subscriber-bootstrap-class",
+            "name": "Subscriber: bootstrap class",
+            "description": null
+        },
+        {
+            "id": "subscriber-implement-class",
+            "name": "Subscriber: implement class",
+            "description": null
+        },
+        {
+            "id": "subscriber-log-something",
+            "name": "Subscriber: log something",
+            "description": null
+        },
+        {
+            "id": "subscriber-dump-event",
+            "name": "Subscriber: dump event",
+            "description": null
+        },
+        {
+            "id": "subscriber-log-user-agent",
+            "name": "Subscriber: Log user agent",
+            "description": null
+        },
+        {
+            "id": "index-php-create-2-fake-requests",
+            "name": "index.php: Create 2 fake requests",
+            "description": null
+        },
+        {
+            "id": "index-php-remove-fake-requests",
+            "name": "index.php: remove fake requests",
+            "description": null
+        },
+        {
+            "id": "routerlistener-dump-params",
+            "name": "RouterListener: dump params",
+            "description": null
+        },
+        {
+            "id": "routerlistener-show-yaml-route",
+            "name": "RouterListener: show YAML route",
+            "description": null
+        },
+        {
+            "id": "routerlistener-defaults-controller",
+            "name": "RouterListener: defaults controller",
+            "description": null
+        },
+        {
+            "id": "routerlistener-add-id",
+            "name": "RouterListener: add {id}",
+            "description": null
+        },
+        {
+            "id": "routerlistener-default-id",
+            "name": "RouterListener: default id",
+            "description": null
+        },
+        {
+            "id": "routerlistener-invented-defaults",
+            "name": "RouterListener: invented defaults",
+            "description": null
+        },
+        {
+            "id": "routerlistener-annotation-default",
+            "name": "RouterListener: annotation default",
+            "description": null
+        },
+        {
+            "id": "routerlistener-remove-default",
+            "name": "RouterListener: remove default",
+            "description": null
+        },
+        {
+            "id": "routerlistener-remove-dd",
+            "name": "RouterListener: remove dd",
+            "description": null
+        },
+        {
+            "id": "routerlistener-dump-request-before-after",
+            "name": "RouterListener: dump request before+after",
+            "description": null
+        },
+        {
+            "id": "routerlistener-remove-request-dump",
+            "name": "RouterListener: remove request dump",
+            "description": null
+        },
+        {
+            "id": "controllerresolver-dump-controller",
+            "name": "ControllerResolver: dump $controller",
+            "description": null
+        },
+        {
+            "id": "controllerresolver-remove-dd",
+            "name": "ControllerResolver: remove dd",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-simplify-controller",
+            "name": "ArgumentResolver: simplify controller",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-dd-metadata",
+            "name": "ArgumentResolver: dd($metadata)",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-dump-resolvers",
+            "name": "ArgumentResolver: dump resolvers",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-remove-dd",
+            "name": "ArgumentResolver: remove dd",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-dd-request-attribute-resolver",
+            "name": "ArgumentResolver: dd request attribute resolver",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-remove-ravr-dd",
+            "name": "ArgumentResolver: remove RAVR dd()",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-add-service-resolver-dd",
+            "name": "ArgumentResolver: add service resolver dd",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-service-dump-container",
+            "name": "ArgumentResolver: service dump container",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-dump-inner-container",
+            "name": "ArgumentResolver: dump inner container",
+            "description": null
+        },
+        {
+            "id": "argumentresolver-remove-service-dd",
+            "name": "ArgumentResolver: remove service dd()",
+            "description": null
+        },
+        {
+            "id": "viewevent-forget-controller-return",
+            "name": "ViewEvent: forget controller return",
+            "description": null
+        },
+        {
+            "id": "viewevent-put-it-back",
+            "name": "ViewEvent: put it back",
+            "description": null
+        },
+        {
+            "id": "exception-throw-noconfigurationexception",
+            "name": "Exception: throw NoConfigurationException",
+            "description": null
+        },
+        {
+            "id": "exception-remove-that",
+            "name": "Exception: remove that",
+            "description": null
+        },
+        {
+            "id": "exception-dd-controller-in-errorlistener",
+            "name": "Exception: dd() controller in ErrorListener",
+            "description": null
+        },
+        {
+            "id": "exception-remove-dd-controller",
+            "name": "Exception: remove dd controller",
+            "description": null
+        },
+        {
+            "id": "exception-dd-errorrenderer-in-controller",
+            "name": "Exception: dd($errorRenderer) in controller",
+            "description": null
+        },
+        {
+            "id": "exception-remove-dd-errorrenderer",
+            "name": "Exception: remove dd($errorRenderer)",
+            "description": null
+        },
+        {
+            "id": "exception-mess-with-exception-tpl",
+            "name": "Exception: mess with exception tpl",
+            "description": null
+        },
+        {
+            "id": "exception-remove-debug-code",
+            "name": "Exception: remove debug code",
+            "description": null
+        },
+        {
+            "id": "hack-controller-controller-in-subscriber",
+            "name": "Hack _controller: _controller in subscriber",
+            "description": null
+        },
+        {
+            "id": "hack-controller-add-argument",
+            "name": "Hack _controller: add argument",
+            "description": null
+        },
+        {
+            "id": "hack-controller-remove-controller",
+            "name": "Hack _controller: remove controller",
+            "description": null
+        },
+        {
+            "id": "arguments-try-to-use-ismac-argument",
+            "name": "Arguments: try to use $isMac argument",
+            "description": null
+        },
+        {
+            "id": "arguments-set-arg-via-attributes",
+            "name": "Arguments: set arg via ->attributes",
+            "description": null
+        },
+        {
+            "id": "argumentvalueresolver-bootstrap-class",
+            "name": "ArgumentValueResolver: bootstrap class",
+            "description": null
+        },
+        {
+            "id": "argumentvalueresolver-implement-it",
+            "name": "ArgumentValueResolver: implement it",
+            "description": null
+        },
+        {
+            "id": "paramconverter-put-back-controller",
+            "name": "ParamConverter: put back controller",
+            "description": null
+        }
+    ],
+    "sha": "6c14c74427bc9d9e0e731a8834b818d8fba6e72c"
+}

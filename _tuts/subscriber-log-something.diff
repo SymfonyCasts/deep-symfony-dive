@@ -1,0 +1,43 @@
+diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
+index c265b81..c173abb 100644
+--- a/src/Controller/ArticleController.php
++++ b/src/Controller/ArticleController.php
+@@ -26,8 +26,9 @@ class ArticleController extends AbstractController
+     /**
+      * @Route("/", name="app_homepage")
+      */
+-    public function homepage(ArticleRepository $repository)
++    public function homepage(ArticleRepository $repository, LoggerInterface $logger)
+     {
++        $logger->info('Inside the controller!');
+         $articles = $repository->findAllPublishedOrderedByNewest();
+ 
+         return $this->render('article/homepage.html.twig', [
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index e7f711e..b0ccaa7 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -2,14 +2,22 @@
+ 
+ namespace App\EventListener;
+ 
++use Psr\Log\LoggerInterface;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+ use Symfony\Component\HttpKernel\Event\RequestEvent;
+ 
+ class UserAgentSubscriber implements EventSubscriberInterface
+ {
++    private $logger;
++
++    public function __construct(LoggerInterface $logger)
++    {
++        $this->logger = $logger;
++    }
++
+     public function onKernelRequest()
+     {
+-        dd('it\'s alive!!!');
++        $this->logger->info('I\'m logging SUPER early on the request!');
+     }
+ 
+     public static function getSubscribedEvents()

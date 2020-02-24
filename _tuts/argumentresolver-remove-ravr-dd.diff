@@ -1,0 +1,12 @@
+diff --git a/vendor/symfony/http-kernel/Controller/ArgumentResolver/RequestAttributeValueResolver.php b/vendor/symfony/http-kernel/Controller/ArgumentResolver/RequestAttributeValueResolver.php
+index 061de3e..c62d327 100644
+--- a/vendor/symfony/http-kernel/Controller/ArgumentResolver/RequestAttributeValueResolver.php
++++ b/vendor/symfony/http-kernel/Controller/ArgumentResolver/RequestAttributeValueResolver.php
+@@ -27,7 +27,6 @@ final class RequestAttributeValueResolver implements ArgumentValueResolverInterf
+      */
+     public function supports(Request $request, ArgumentMetadata $argument): bool
+     {
+-        dd($request->attributes->all(), $argument);
+         return !$argument->isVariadic() && $request->attributes->has($argument->getName());
+     }
+ 

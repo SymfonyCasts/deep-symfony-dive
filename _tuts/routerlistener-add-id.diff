@@ -1,0 +1,10 @@
+diff --git a/config/routes.yaml b/config/routes.yaml
+index dceb2d7..a8bc6d4 100644
+--- a/config/routes.yaml
++++ b/config/routes.yaml
+@@ -1,4 +1,4 @@
+ index:
+-    path: /playing
++    path: /playing/{id}
+     defaults:
+         _controller: App\Controller\DefaultController::index

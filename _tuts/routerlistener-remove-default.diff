@@ -1,0 +1,13 @@
+diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
+index b4bbcab..c173abb 100644
+--- a/src/Controller/ArticleController.php
++++ b/src/Controller/ArticleController.php
+@@ -37,7 +37,7 @@ class ArticleController extends AbstractController
+     }
+ 
+     /**
+-     * @Route("/news/{slug}", name="article_show", defaults={"foo": "bar"})
++     * @Route("/news/{slug}", name="article_show")
+      */
+     public function show(Article $article, SlackClient $slack)
+     {

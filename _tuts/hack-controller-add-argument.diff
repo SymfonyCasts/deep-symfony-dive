@@ -1,0 +1,23 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 1a059ed..57d32de 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -4,6 +4,7 @@ namespace App\EventListener;
+ 
+ use Psr\Log\LoggerInterface;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
++use Symfony\Component\HttpFoundation\Request;
+ use Symfony\Component\HttpFoundation\Response;
+ use Symfony\Component\HttpKernel\Event\RequestEvent;
+ 
+@@ -20,7 +21,9 @@ class UserAgentSubscriber implements EventSubscriberInterface
+     {
+         $request = $event->getRequest();
+ 
+-        $request->attributes->set('_controller', function() {
++        $request->attributes->set('_controller', function($slug = null) {
++            dd($slug);
++
+             return new Response('I just took over the controller!');
+         });
+ 

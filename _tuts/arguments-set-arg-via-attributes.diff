@@ -1,0 +1,13 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 2b51e39..439c6f7 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -31,6 +31,8 @@ class UserAgentSubscriber implements EventSubscriberInterface
+ 
+         $userAgent = $request->headers->get('User-Agent');
+         $this->logger->info(sprintf('The User-Agent is "%s"', $userAgent));
++        $isMac = stripos($userAgent, 'Mac') !== false;
++        $request->attributes->set('isMac', $isMac);
+     }
+ 
+     public static function getSubscribedEvents()

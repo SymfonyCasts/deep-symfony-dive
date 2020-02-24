@@ -1,0 +1,20 @@
+diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
+index bf23367..46f41d8 100644
+--- a/src/Controller/ArticleController.php
++++ b/src/Controller/ArticleController.php
+@@ -39,14 +39,9 @@ class ArticleController extends AbstractController
+     /**
+      * @Route("/news/{slug}", name="article_show")
+      */
+-    public function show($slug, SlackClient $slack, ArticleRepository $articleRepository, $isMac)
++    public function show(Article $article, SlackClient $slack, ArticleRepository $articleRepository, $isMac)
+     {
+         dump($isMac);
+-        $article = $articleRepository->findOneBy(['slug' => $slug]);
+-
+-        if (!$article) {
+-            throw $this->createNotFoundException();
+-        }
+ 
+         if ($article->getSlug() === 'khaaaaaan') {
+             $slack->sendMessage('Kahn', 'Ah, Kirk, my old friend...');

@@ -1,0 +1,15 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index b0ccaa7..9aa2463 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -15,8 +15,9 @@ class UserAgentSubscriber implements EventSubscriberInterface
+         $this->logger = $logger;
+     }
+ 
+-    public function onKernelRequest()
++    public function onKernelRequest(RequestEvent $event)
+     {
++        dd($event);
+         $this->logger->info('I\'m logging SUPER early on the request!');
+     }
+ 

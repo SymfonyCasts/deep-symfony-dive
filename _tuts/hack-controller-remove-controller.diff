@@ -1,0 +1,18 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 57d32de..2b51e39 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -21,11 +21,13 @@ class UserAgentSubscriber implements EventSubscriberInterface
+     {
+         $request = $event->getRequest();
+ 
++        /*
+         $request->attributes->set('_controller', function($slug = null) {
+             dd($slug);
+ 
+             return new Response('I just took over the controller!');
+         });
++        */
+ 
+         $userAgent = $request->headers->get('User-Agent');
+         $this->logger->info(sprintf('The User-Agent is "%s"', $userAgent));

@@ -1,0 +1,12 @@
+diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
+index 20bbe08..5679f01 100644
+--- a/src/Controller/ArticleController.php
++++ b/src/Controller/ArticleController.php
+@@ -41,7 +41,6 @@ class ArticleController extends AbstractController
+      */
+     public function show($slug, SlackClient $slack, ArticleRepository $articleRepository)
+     {
+-        return;
+         $article = $articleRepository->findOneBy(['slug' => $slug]);
+ 
+         if (!$article) {
