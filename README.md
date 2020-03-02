@@ -1,7 +1,7 @@
 # Deep Dive into Symfony 5!
 
 Well hi there! This repository holds the code and script
-for the [Deep Dive into Symfony 5!](https://symfonycasts.com/screencast/symfony5-deep-dive) course on SymfonyCasts.
+for the [Deep Dive into Symfony 5!](https://symfonycasts.com/screencast/deep-dive) course on SymfonyCasts.
 
 ## Setup
 
@@ -94,3 +94,4 @@ And as always, thanks so much for your support and letting
 us do what we love!
 
 <3 Your friends at SymfonyCasts
+
