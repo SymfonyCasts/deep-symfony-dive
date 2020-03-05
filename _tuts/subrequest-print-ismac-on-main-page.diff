@@ -1,0 +1,36 @@
+diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
+index 46f41d8..53b07ce 100644
+--- a/src/Controller/ArticleController.php
++++ b/src/Controller/ArticleController.php
+@@ -26,13 +26,14 @@ class ArticleController extends AbstractController
+     /**
+      * @Route("/", name="app_homepage")
+      */
+-    public function homepage(ArticleRepository $repository, LoggerInterface $logger)
++    public function homepage(ArticleRepository $repository, LoggerInterface $logger, $isMac)
+     {
+         $logger->info('Inside the controller!');
+         $articles = $repository->findAllPublishedOrderedByNewest();
+ 
+         return $this->render('article/homepage.html.twig', [
+             'articles' => $articles,
++            'isMac' => $isMac,
+         ]);
+     }
+ 
+diff --git a/templates/article/homepage.html.twig b/templates/article/homepage.html.twig
+index 4f5edd6..e4f9531 100644
+--- a/templates/article/homepage.html.twig
++++ b/templates/article/homepage.html.twig
+@@ -48,6 +48,11 @@
+                     <img class="advertisement-img" src="{{ asset('build/images/space-ice.png') }}">
+                     <p><span class="advertisement-text">New:</span> Space Ice Cream!</p>
+                     <button class="btn btn-info">Buy Now!</button>
++
++                    {% if isMac %}
++                        <hr/>
++                        <small>BTW, you're using a Mac!</small>
++                    {% endif %}
+                 </div>
+ 
+                 {{ render(controller('App\\Controller\\PartialController::trendingQuotes')) }}

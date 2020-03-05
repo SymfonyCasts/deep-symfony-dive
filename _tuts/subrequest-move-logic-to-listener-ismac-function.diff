@@ -1,0 +1,22 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 6bccb6e..0b35ba6 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -43,4 +43,17 @@ class UserAgentSubscriber implements EventSubscriberInterface
+             RequestEvent::class => 'onKernelRequest'
+         ];
+     }
++
++    private function isMac(Request $request)
++    {
++        if ($request->query->has('mac')) {
++            yield $request->query->getBoolean('mac');
++
++            return;
++        }
++
++        $userAgent = $request->headers->get('User-Agent');
++
++        yield stripos($userAgent, 'Mac') !== false;
++    }
+ }

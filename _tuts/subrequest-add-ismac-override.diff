@@ -1,0 +1,17 @@
+diff --git a/src/Service/IsMacArgumentValueResolver.php b/src/Service/IsMacArgumentValueResolver.php
+index 0c81f6e..27489bb 100644
+--- a/src/Service/IsMacArgumentValueResolver.php
++++ b/src/Service/IsMacArgumentValueResolver.php
+@@ -15,6 +15,12 @@ class IsMacArgumentValueResolver implements ArgumentValueResolverInterface
+ 
+     public function resolve(Request $request, ArgumentMetadata $argument)
+     {
++        if ($request->query->has('mac')) {
++            yield $request->query->getBoolean('mac');
++
++            return;
++        }
++
+         $userAgent = $request->headers->get('User-Agent');
+ 
+         yield stripos($userAgent, 'Mac') !== false;

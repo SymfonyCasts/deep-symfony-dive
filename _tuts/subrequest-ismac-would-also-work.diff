@@ -1,0 +1,13 @@
+diff --git a/templates/article/homepage.html.twig b/templates/article/homepage.html.twig
+index ba6cf30..e4f4e7f 100644
+--- a/templates/article/homepage.html.twig
++++ b/templates/article/homepage.html.twig
+@@ -56,7 +56,7 @@
+                 </div>
+ 
+                 {{ render(controller('App\\Controller\\PartialController::trendingQuotes', {
+-                    isMac: isMac
++                    _isMac: isMac
+                 })) }}
+             </div>
+         </div>

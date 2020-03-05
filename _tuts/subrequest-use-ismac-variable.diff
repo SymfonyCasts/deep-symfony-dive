@@ -1,0 +1,34 @@
+diff --git a/src/Controller/PartialController.php b/src/Controller/PartialController.php
+index a37a76a..4f6f9e5 100644
+--- a/src/Controller/PartialController.php
++++ b/src/Controller/PartialController.php
+@@ -6,12 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+ 
+ class PartialController extends AbstractController
+ {
+-    public function trendingQuotes()
++    public function trendingQuotes($isMac)
+     {
+         $quotes = $this->getTendingQuotes();
+ 
+         return $this->render('partial/trendingQuotes.html.twig', [
+-            'quotes' => $quotes
++            'quotes' => $quotes,
++            'isMac' => $isMac
+         ]);
+     }
+ 
+diff --git a/templates/partial/trendingQuotes.html.twig b/templates/partial/trendingQuotes.html.twig
+index a979104..2ddc1dd 100644
+--- a/templates/partial/trendingQuotes.html.twig
++++ b/templates/partial/trendingQuotes.html.twig
+@@ -7,4 +7,9 @@
+             </p>
+         {% endfor %}
+     </div>
++
++    {% if isMac %}
++        <hr/>
++        <small>BTW, you're using a Mac!</small>
++    {% endif %}
+ </div>

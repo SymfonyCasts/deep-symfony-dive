@@ -1,0 +1,15 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 2b51e39..6bccb6e 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -19,6 +19,10 @@ class UserAgentSubscriber implements EventSubscriberInterface
+ 
+     public function onKernelRequest(RequestEvent $event)
+     {
++        if (!$event->isMasterRequest()) {
++            return;
++        }
++
+         $request = $event->getRequest();
+ 
+         /*

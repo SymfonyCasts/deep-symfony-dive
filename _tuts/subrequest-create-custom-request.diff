@@ -1,0 +1,22 @@
+diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
+index 53b07ce..72de930 100644
+--- a/src/Controller/ArticleController.php
++++ b/src/Controller/ArticleController.php
+@@ -7,6 +7,7 @@ use App\Repository\ArticleRepository;
+ use App\Service\SlackClient;
+ use Doctrine\ORM\EntityManagerInterface;
+ use Psr\Log\LoggerInterface;
++use Symfony\Component\HttpFoundation\Request;
+ use Symfony\Component\Routing\Annotation\Route;
+ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+ use Symfony\Component\HttpFoundation\JsonResponse;
+@@ -31,6 +32,9 @@ class ArticleController extends AbstractController
+         $logger->info('Inside the controller!');
+         $articles = $repository->findAllPublishedOrderedByNewest();
+ 
++        $request = new Request();
++        $request->attributes->set('_controller', 'App\\Controller\\PartialController::trendingQuotes');
++
+         return $this->render('article/homepage.html.twig', [
+             'articles' => $articles,
+             'isMac' => $isMac,

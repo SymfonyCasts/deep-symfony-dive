@@ -244,7 +244,72 @@
             "id": "paramconverter-put-back-controller",
             "name": "ParamConverter: put back controller",
             "description": null
+        },
+        {
+            "id": "subrequest-use-render-in-twig",
+            "name": "SubRequest: use render() in Twig",
+            "description": null
+        },
+        {
+            "id": "subrequest-use-ismac-variable",
+            "name": "SubRequest: Use isMac variable",
+            "description": null
+        },
+        {
+            "id": "subrequest-print-ismac-on-main-page",
+            "name": "SubRequest: print isMac on main page",
+            "description": null
+        },
+        {
+            "id": "subrequest-add-ismac-override",
+            "name": "SubRequest: Add isMac override",
+            "description": null
+        },
+        {
+            "id": "subrequest-create-custom-request",
+            "name": "SubRequest: create custom Request",
+            "description": null
+        },
+        {
+            "id": "subrequest-handle-manual-sub-request",
+            "name": "SubRequest: handle manual sub-request",
+            "description": null
+        },
+        {
+            "id": "subrequest-comment-out-manual-sub-request",
+            "name": "SubRequest: comment-out manual sub-request",
+            "description": null
+        },
+        {
+            "id": "subrequest-bail-in-listener-on-sub",
+            "name": "SubRequest: bail in listener on sub",
+            "description": null
+        },
+        {
+            "id": "subrequest-move-logic-to-listener-ismac-function",
+            "name": "SubRequest: move logic to listener isMac function",
+            "description": null
+        },
+        {
+            "id": "subrequest-change-yield-to-return",
+            "name": "SubRequest: change yield to return",
+            "description": null
+        },
+        {
+            "id": "subrequest-communicate-ismac-through-attributes",
+            "name": "SubRequest: communicate isMac through attributes",
+            "description": null
+        },
+        {
+            "id": "subrequest-pass-ismac-to-render",
+            "name": "SubRequest: pass isMac to render()",
+            "description": null
+        },
+        {
+            "id": "subrequest-ismac-would-also-work",
+            "name": "SubRequest: _isMac would also work",
+            "description": null
         }
     ],
-    "sha": "6c14c74427bc9d9e0e731a8834b818d8fba6e72c"
+    "sha": "f76faeb5af5e75c64853eb0c50b8560f0a5e7c0f"
 }

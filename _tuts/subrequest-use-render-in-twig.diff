@@ -1,0 +1,83 @@
+diff --git a/src/Controller/PartialController.php b/src/Controller/PartialController.php
+new file mode 100644
+index 0000000..a37a76a
+--- /dev/null
++++ b/src/Controller/PartialController.php
+@@ -0,0 +1,38 @@
++<?php
++
++namespace App\Controller;
++
++use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
++
++class PartialController extends AbstractController
++{
++    public function trendingQuotes()
++    {
++        $quotes = $this->getTendingQuotes();
++
++        return $this->render('partial/trendingQuotes.html.twig', [
++            'quotes' => $quotes
++        ]);
++    }
++
++    private function getTendingQuotes()
++    {
++        return [
++            [
++                'author' => 'Wernher von Braun, Rocket Engineer',
++                'link' => 'https://en.wikipedia.org/wiki/Wernher_von_Braun',
++                'quote' => 'Our two greatest problems are gravity and paperwork. We can lick gravity, but sometimes the paperwork is overwhelming.',
++            ],
++            [
++                'author' => 'Aaron Cohen, NASA Administrator',
++                'link' => 'https://en.wikipedia.org/wiki/Aaron_Cohen_(Deputy_NASA_administrator)',
++                'quote' => 'Let\'s face it, space is a risky business. I always considered every launch a barely controlled explosion.',
++            ],
++            [
++                'author' => 'Christa McAuliffe, Challenger Astronaut',
++                'link' => 'https://en.wikipedia.org/wiki/Christa_McAuliffe',
++                'quote' => 'If offered a seat on a rocket ship, don\'t ask what seat. Just get on.',
++            ],
++        ];
++    }
++}
+diff --git a/templates/article/homepage.html.twig b/templates/article/homepage.html.twig
+index 6ff1940..4f5edd6 100644
+--- a/templates/article/homepage.html.twig
++++ b/templates/article/homepage.html.twig
+@@ -50,17 +50,7 @@
+                     <button class="btn btn-info">Buy Now!</button>
+                 </div>
+ 
+-                <div class="quote-space pb-2 pt-2">
+-                    <h3 class="text-center pb-3">Trending Quotes</h3>
+-
+-                    <div class="px-5">
+-                        <p><i class="fa fa-comment"></i> "Our two greatest problems are gravity and paperwork. We can lick gravity, but sometimes the paperwork is overwhelming." <br>— <a href="https://en.wikipedia.org/wiki/Wernher_von_Braun">Wernher von Braun, Rocket Engineer</a></p>
+-
+-                        <p class="pt-4"><i class="fa fa-comment"></i> "Let's face it, space is a risky business. I always considered every launch a barely controlled explosion." <br>— <a href="https://en.wikipedia.org/wiki/Aaron_Cohen_(Deputy_NASA_administrator)">Aaron Cohen, NASA Administrator</a></p>
+-
+-                        <p class="pt-4"><i class="fa fa-comment"></i> "If offered a seat on a rocket ship, don't ask what seat. Just get on."<br>— <a href="https://en.wikipedia.org/wiki/Christa_McAuliffe">Christa McAuliffe, Challenger Astronaut</a></p>
+-                    </div>
+-                </div>
++                {{ render(controller('App\\Controller\\PartialController::trendingQuotes')) }}
+             </div>
+         </div>
+     </div>
+diff --git a/templates/partial/trendingQuotes.html.twig b/templates/partial/trendingQuotes.html.twig
+new file mode 100644
+index 0000000..a979104
+--- /dev/null
++++ b/templates/partial/trendingQuotes.html.twig
+@@ -0,0 +1,10 @@
++<div class="quote-space pb-2 pt-2">
++    <h3 class="text-center pb-3">Trending Quotes</h3>
++    <div class="px-5">
++        {% for quote in quotes %}
++            <p{{ loop.first ? '' : 'class="pt-4"' }}>
++                <i class="fa fa-comment"></i> "{{ quote.quote }}" <br>— <a href="{{ quote.link }}">{{ quote.author }}</a>
++            </p>
++        {% endfor %}
++    </div>
++</div>

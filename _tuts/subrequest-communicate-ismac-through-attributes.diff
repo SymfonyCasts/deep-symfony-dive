@@ -1,0 +1,39 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index cde9b29..185dab4 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -35,6 +35,8 @@ class UserAgentSubscriber implements EventSubscriberInterface
+ 
+         $userAgent = $request->headers->get('User-Agent');
+         $this->logger->info(sprintf('The User-Agent is "%s"', $userAgent));
++
++        $request->attributes->set('_isMac', $this->isMac($request));
+     }
+ 
+     public static function getSubscribedEvents()
+diff --git a/src/Service/IsMacArgumentValueResolver.php b/src/Service/IsMacArgumentValueResolver.php
+index 27489bb..a73cfe2 100644
+--- a/src/Service/IsMacArgumentValueResolver.php
++++ b/src/Service/IsMacArgumentValueResolver.php
+@@ -10,19 +10,11 @@ class IsMacArgumentValueResolver implements ArgumentValueResolverInterface
+ {
+     public function supports(Request $request, ArgumentMetadata $argument)
+     {
+-        return $argument->getName() === 'isMac';
++        return $argument->getName() === 'isMac' && $request->attributes->has('_isMac');
+     }
+ 
+     public function resolve(Request $request, ArgumentMetadata $argument)
+     {
+-        if ($request->query->has('mac')) {
+-            yield $request->query->getBoolean('mac');
+-
+-            return;
+-        }
+-
+-        $userAgent = $request->headers->get('User-Agent');
+-
+-        yield stripos($userAgent, 'Mac') !== false;
++        yield $request->attributes->get('_isMac');
+     }
+ }
