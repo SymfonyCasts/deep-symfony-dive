@@ -1,8 +1,8 @@
 diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
-index 5679f01..20bbe08 100644
+index c3f3abd..511aff0 100644
 --- a/src/Controller/ArticleController.php
 +++ b/src/Controller/ArticleController.php
-@@ -41,6 +41,7 @@ class ArticleController extends AbstractController
+@@ -45,6 +45,7 @@ class ArticleController extends AbstractController
       */
      public function show($slug, SlackClient $slack, ArticleRepository $articleRepository)
      {

@@ -1,0 +1,15 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index d4abd3c..b099c6d 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -18,10 +18,6 @@ class UserAgentSubscriber implements EventSubscriberInterface
+ 
+     public function onKernelRequest(RequestEvent $event)
+     {
+-        $event->setResponse(new Response(
+-            'Ah, ah, ah: you didn\'t say the magic word'
+-        ));
+-
+         $request = $event->getRequest();
+ 
+         $userAgent = $request->headers->get('User-Agent');

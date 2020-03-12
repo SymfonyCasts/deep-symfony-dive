@@ -1,5 +1,5 @@
 diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
-index ac5a329..5679f01 100644
+index bcde5e3..c3f3abd 100644
 --- a/src/Controller/ArticleController.php
 +++ b/src/Controller/ArticleController.php
 @@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
@@ -10,7 +10,7 @@ index ac5a329..5679f01 100644
  
  class ArticleController extends AbstractController
  {
-@@ -45,7 +44,7 @@ class ArticleController extends AbstractController
+@@ -49,7 +48,7 @@ class ArticleController extends AbstractController
          $article = $articleRepository->findOneBy(['slug' => $slug]);
  
          if (!$article) {

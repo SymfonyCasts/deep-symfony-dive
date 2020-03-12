@@ -1,8 +1,8 @@
 diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
-index bf23367..46f41d8 100644
+index c8e6147..f30adb9 100644
 --- a/src/Controller/ArticleController.php
 +++ b/src/Controller/ArticleController.php
-@@ -39,14 +39,9 @@ class ArticleController extends AbstractController
+@@ -43,14 +43,9 @@ class ArticleController extends AbstractController
      /**
       * @Route("/news/{slug}", name="article_show")
       */

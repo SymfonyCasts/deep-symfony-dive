@@ -1,5 +1,5 @@
 diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
-index 72de930..de583db 100644
+index 95534ae..9699d84 100644
 --- a/src/Controller/ArticleController.php
 +++ b/src/Controller/ArticleController.php
 @@ -8,6 +8,7 @@ use App\Service\SlackClient;
@@ -10,7 +10,7 @@ index 72de930..de583db 100644
  use Symfony\Component\Routing\Annotation\Route;
  use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  use Symfony\Component\HttpFoundation\JsonResponse;
-@@ -27,13 +28,20 @@ class ArticleController extends AbstractController
+@@ -31,13 +32,20 @@ class ArticleController extends AbstractController
      /**
       * @Route("/", name="app_homepage")
       */

@@ -1,8 +1,8 @@
 diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
-index de583db..197e5ec 100644
+index 9699d84..7a5b59a 100644
 --- a/src/Controller/ArticleController.php
 +++ b/src/Controller/ArticleController.php
-@@ -33,6 +33,7 @@ class ArticleController extends AbstractController
+@@ -37,6 +37,7 @@ class ArticleController extends AbstractController
          $logger->info('Inside the controller!');
          $articles = $repository->findAllPublishedOrderedByNewest();
  
@@ -10,7 +10,7 @@ index de583db..197e5ec 100644
          // manual sub-request example
          $request = new Request();
          $request->attributes->set('_controller', 'App\\Controller\\PartialController::trendingQuotes');
-@@ -42,6 +43,7 @@ class ArticleController extends AbstractController
+@@ -46,6 +47,7 @@ class ArticleController extends AbstractController
              $request,
              HttpKernelInterface::SUB_REQUEST
          );

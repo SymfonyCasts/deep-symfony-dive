@@ -96,6 +96,16 @@
             "description": null
         },
         {
+            "id": "requestevent-return-response-now",
+            "name": "RequestEvent: return response now",
+            "description": null
+        },
+        {
+            "id": "requestevent-remove-response",
+            "name": "RequestEvent: remove response",
+            "description": null
+        },
+        {
             "id": "controllerresolver-dump-controller",
             "name": "ControllerResolver: dump $controller",
             "description": null
@@ -103,6 +113,21 @@
         {
             "id": "controllerresolver-remove-dd",
             "name": "ControllerResolver: remove dd",
+            "description": null
+        },
+        {
+            "id": "controllerresolver-constructor-autowire-in-controller",
+            "name": "ControllerResolver: constructor autowire in controller",
+            "description": null
+        },
+        {
+            "id": "controllerresolver-dump-final-controller",
+            "name": "ControllerResolver: dump final controller",
+            "description": null
+        },
+        {
+            "id": "controllerresolver-remove-controller-dump",
+            "name": "ControllerResolver: remove controller dump",
             "description": null
         },
         {
@@ -311,5 +336,5 @@
             "description": null
         }
     ],
-    "sha": "f76faeb5af5e75c64853eb0c50b8560f0a5e7c0f"
+    "sha": "ef32d63feaf0e392109fc0d9f86c21419f79786a"
 }

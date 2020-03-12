@@ -1,0 +1,23 @@
+diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
+index 1209159..d4abd3c 100644
+--- a/src/EventListener/UserAgentSubscriber.php
++++ b/src/EventListener/UserAgentSubscriber.php
+@@ -4,6 +4,7 @@ namespace App\EventListener;
+ 
+ use Psr\Log\LoggerInterface;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
++use Symfony\Component\HttpFoundation\Response;
+ use Symfony\Component\HttpKernel\Event\RequestEvent;
+ 
+ class UserAgentSubscriber implements EventSubscriberInterface
+@@ -17,6 +18,10 @@ class UserAgentSubscriber implements EventSubscriberInterface
+ 
+     public function onKernelRequest(RequestEvent $event)
+     {
++        $event->setResponse(new Response(
++            'Ah, ah, ah: you didn\'t say the magic word'
++        ));
++
+         $request = $event->getRequest();
+ 
+         $userAgent = $request->headers->get('User-Agent');

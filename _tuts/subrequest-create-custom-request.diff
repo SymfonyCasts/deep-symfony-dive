@@ -1,5 +1,5 @@
 diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
-index 53b07ce..72de930 100644
+index aaecd55..95534ae 100644
 --- a/src/Controller/ArticleController.php
 +++ b/src/Controller/ArticleController.php
 @@ -7,6 +7,7 @@ use App\Repository\ArticleRepository;
@@ -10,7 +10,7 @@ index 53b07ce..72de930 100644
  use Symfony\Component\Routing\Annotation\Route;
  use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  use Symfony\Component\HttpFoundation\JsonResponse;
-@@ -31,6 +32,9 @@ class ArticleController extends AbstractController
+@@ -35,6 +36,9 @@ class ArticleController extends AbstractController
          $logger->info('Inside the controller!');
          $articles = $repository->findAllPublishedOrderedByNewest();
  
