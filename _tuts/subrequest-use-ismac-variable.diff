@@ -1,5 +1,5 @@
 diff --git a/src/Controller/PartialController.php b/src/Controller/PartialController.php
-index a37a76a..4f6f9e5 100644
+index 831d389..31c6a12 100644
 --- a/src/Controller/PartialController.php
 +++ b/src/Controller/PartialController.php
 @@ -6,12 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,7 +9,7 @@ index a37a76a..4f6f9e5 100644
 -    public function trendingQuotes()
 +    public function trendingQuotes($isMac)
      {
-         $quotes = $this->getTendingQuotes();
+         $quotes = $this->getTrendingQuotes();
  
          return $this->render('partial/trendingQuotes.html.twig', [
 -            'quotes' => $quotes
@@ -19,7 +19,7 @@ index a37a76a..4f6f9e5 100644
      }
  
 diff --git a/templates/partial/trendingQuotes.html.twig b/templates/partial/trendingQuotes.html.twig
-index a979104..2ddc1dd 100644
+index a979104..f9a2fa5 100644
 --- a/templates/partial/trendingQuotes.html.twig
 +++ b/templates/partial/trendingQuotes.html.twig
 @@ -7,4 +7,9 @@
@@ -28,7 +28,7 @@ index a979104..2ddc1dd 100644
      </div>
 +
 +    {% if isMac %}
-+        <hr/>
++        <hr>
 +        <small>BTW, you're using a Mac!</small>
 +    {% endif %}
  </div>

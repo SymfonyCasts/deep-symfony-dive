@@ -266,6 +266,11 @@
             "description": null
         },
         {
+            "id": "arguments-delete-me",
+            "name": "Arguments: delete me",
+            "description": null
+        },
+        {
             "id": "argumentvalueresolver-bootstrap-class",
             "name": "ArgumentValueResolver: bootstrap class",
             "description": null
@@ -346,5 +351,5 @@
             "description": null
         }
     ],
-    "sha": "05b28ef332b47f4013b0b0db6000ec6b4c653205"
+    "sha": "6853df9572387a7b1975673db45ce114cc1a8d4f"
 }

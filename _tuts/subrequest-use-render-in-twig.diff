@@ -1,6 +1,6 @@
 diff --git a/src/Controller/PartialController.php b/src/Controller/PartialController.php
 new file mode 100644
-index 0000000..a37a76a
+index 0000000..831d389
 --- /dev/null
 +++ b/src/Controller/PartialController.php
 @@ -0,0 +1,38 @@
@@ -14,14 +14,14 @@ index 0000000..a37a76a
 +{
 +    public function trendingQuotes()
 +    {
-+        $quotes = $this->getTendingQuotes();
++        $quotes = $this->getTrendingQuotes();
 +
 +        return $this->render('partial/trendingQuotes.html.twig', [
 +            'quotes' => $quotes
 +        ]);
 +    }
 +
-+    private function getTendingQuotes()
++    private function getTrendingQuotes()
 +    {
 +        return [
 +            [

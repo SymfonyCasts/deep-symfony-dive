@@ -1,5 +1,5 @@
 diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
-index cde9b29..185dab4 100644
+index c122f62..84f80ae 100644
 --- a/src/EventListener/UserAgentSubscriber.php
 +++ b/src/EventListener/UserAgentSubscriber.php
 @@ -35,6 +35,8 @@ class UserAgentSubscriber implements EventSubscriberInterface

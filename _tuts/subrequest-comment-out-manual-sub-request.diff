@@ -1,5 +1,5 @@
 diff --git a/src/Controller/ArticleController.php b/src/Controller/ArticleController.php
-index 9699d84..7a5b59a 100644
+index 97fe880..216d0a3 100644
 --- a/src/Controller/ArticleController.php
 +++ b/src/Controller/ArticleController.php
 @@ -37,6 +37,7 @@ class ArticleController extends AbstractController
@@ -10,10 +10,10 @@ index 9699d84..7a5b59a 100644
          // manual sub-request example
          $request = new Request();
          $request->attributes->set('_controller', 'App\\Controller\\PartialController::trendingQuotes');
-@@ -46,6 +47,7 @@ class ArticleController extends AbstractController
-             $request,
+@@ -47,6 +48,7 @@ class ArticleController extends AbstractController
              HttpKernelInterface::SUB_REQUEST
          );
+         dump($response);
 +        */
  
          return $this->render('article/homepage.html.twig', [

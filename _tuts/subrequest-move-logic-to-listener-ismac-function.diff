@@ -1,5 +1,5 @@
 diff --git a/src/EventListener/UserAgentSubscriber.php b/src/EventListener/UserAgentSubscriber.php
-index 6bccb6e..0b35ba6 100644
+index 6bccb6e..c149413 100644
 --- a/src/EventListener/UserAgentSubscriber.php
 +++ b/src/EventListener/UserAgentSubscriber.php
 @@ -43,4 +43,17 @@ class UserAgentSubscriber implements EventSubscriberInterface
@@ -7,7 +7,7 @@ index 6bccb6e..0b35ba6 100644
          ];
      }
 +
-+    private function isMac(Request $request)
++    private function isMac(Request $request): bool
 +    {
 +        if ($request->query->has('mac')) {
 +            yield $request->query->getBoolean('mac');
