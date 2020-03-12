@@ -1,0 +1,12 @@
+diff --git a/vendor/symfony/http-kernel/EventListener/RouterListener.php b/vendor/symfony/http-kernel/EventListener/RouterListener.php
+index 0662601..31bbc3b 100644
+--- a/vendor/symfony/http-kernel/EventListener/RouterListener.php
++++ b/vendor/symfony/http-kernel/EventListener/RouterListener.php
+@@ -100,7 +100,6 @@ class RouterListener implements EventSubscriberInterface
+ 
+         $this->setCurrentRequest($request);
+ 
+-        dump($request->attributes->has('_controller'));
+         if ($request->attributes->has('_controller')) {
+             // routing is already done
+             return;

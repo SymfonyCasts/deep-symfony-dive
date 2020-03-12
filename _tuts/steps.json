@@ -246,6 +246,16 @@
             "description": null
         },
         {
+            "id": "hack-controller-dump-in-routerlistener",
+            "name": "Hack _controller: dump in RouterListener",
+            "description": null
+        },
+        {
+            "id": "hack-controller-remove-controller-dump",
+            "name": "Hack _controller: remove controller dump",
+            "description": null
+        },
+        {
             "id": "arguments-try-to-use-ismac-argument",
             "name": "Arguments: try to use $isMac argument",
             "description": null
@@ -336,5 +346,5 @@
             "description": null
         }
     ],
-    "sha": "ef32d63feaf0e392109fc0d9f86c21419f79786a"
+    "sha": "05b28ef332b47f4013b0b0db6000ec6b4c653205"
 }
