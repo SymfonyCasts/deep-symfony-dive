@@ -1,5 +1,6 @@
 chapters:
     - events
+    - event-listener
     - kernel-handle
     - router-listener
     - controller-resolver

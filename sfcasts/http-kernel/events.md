@@ -1,132 +1,89 @@
-# Events
+# Events, Events & Events!
 
-Coming soon...
+Hi friends! Ok: so you already know how to use Symfony... maybe you... use it
+every day. Heck, I love it so much, I've been known to use it on vacation! And
+now, you're ready to go deeper - to find out how Symfony *really* works
+under-the-hood. If this is you, welcome! We're in for a wild ride.
 
-Hey friends, if you already know Symfony, but you want to really know it, like really
-know how the pieces work under the hood, you've come to the right place. You're also
-my kind of person cause I love to know how the under workings of systems behave. In
-this first deep dive tutorial, we're going to go to the heart of of what happens
-between during the request response process in Symfony, it is all centers around a
-class called `HttpKernel`, which is an amazing class because that same class is used
-in the Symfony framework, Drupal, CMS, PHP, BB, the forum software, and many other
-technologies. So how can one class be the heart of so many different technologies?
-That's what we're going to find out as always, to get the most out of the tutorial,
-you should download the course code and code along with me. After you unzip the code,
-you'll find a `start/` directory with the same code you see here. Follow this `README.md`
-file down here for all the setup instructions. The last step will be to
-leverage the Symfony binary to start a web server with `symfony serve`. I'm actually
-gonna pass the
+In this first deep dive tutorial, we're going to the *heart* of what happens
+during the request-response process in Symfony. It all centers around a
+class called `HttpKernel`, which is an *incredible* class. This *one* class
+is used as the *heart* of Symfony *and* Drupal... as well as a bunch of other
+projects, for example, phpBB - the famous forum system.
 
-```terminal
+So how can one class be the *heart* of technologies that are seemingly *so*
+different? That's what we're going to find out.
+
+## Project Setup
+
+As always, if you *truly* want to impress your friends with your *deep*
+knowledge of Symfony, download the course code and code along with me. After you
+unzip the file, you'll find a `start/` directory with the same code that you see
+here. Follow the `README.md` file for all the *thrilling* setup instructions.
+
+The *last* step will be to leverage the [Symfony binary](https://symfony.com/download)
+to start a web server with `symfony serve`. I'm actually going to pass `-d` so it
+runs in the background as a daemon:
+
+```terminal-silent
 symfony serve -d
-``` 
- 
-that's optional, but it runs Symfony in the background as a Damon. So I get my 
-terminal back.
+```
 
-Once you run that spin over and head to `localhost:8000` to find the space bar.
-Many of you might recognize this from our Symfony 4 tutorial. So I used it because
-it's a fairly large project but it's been upgraded to Symfony 5. So the big
-question was this tutorial is that we know that every, we know that our job as a
-developer starts with the request, the request comes into a server, then our
-application does a bunch of work in the final product is the response. I want to find
-out what happens between the request and the response. So for this homepage here, for
-example, let's look at the controller for this `src/Controller/ArticleController.php`
-and here it is `homepage()`. This is the controller that renders that page and above it
-is the route. So the one, the two things that we know happen between the start of the
-request and the end of the response are the route the route is matched. And then
-something calls our controller and our controller always returns a response. That's
-actually what the render function returns is a response. What I want to find out
-though is who executes the controller and who calls, who executes the routing and who
-ultimately calls my controller. I want to see the code that does that.
+Now, *spin* back over to your browser and head to https://localhost:8000 to
+find: The SpaceBar. Some of you might recognize this from our Symfony 4 tutorials.
+Well, I've upgraded it to Symfony 5 and it will be our *perfect* guinea pig for
+diving deep into Symfony.
 
-To start this all off, go back to the browser and on the web Debo tool bar down here,
-I'm going to click open this in a new tab. Click on the milliseconds, clicked open a
-new tab and this will take me into the performance part of the profiler. This screen
-is awesome. It's meant to show you where your site might be slow, but the really
-great part about it is discovering what's happening inside of Symfony. And the real
-trick here is to change this threshold from one milliseconds down to zero
-milliseconds instead of hiding noise and now shows everything that happens between
-the request and the response. So you can see here kind of in the middle here is our
-controller. It takes 36 milliseconds to execute. You can see the twig templates being
-executed below it and you can even see little doctrine queries happening various
-times during that.
+## Request -> Controller -> Response. But what else?
 
-The biggest thing that noticed that this part is that most of the other lines you see
-before and after the controller have the word `Listener` on them or sometimes
-`Subscriber`, which can the same thing. These are event listeners on a high level. What
-happens inside Symfony is it boots, some events, the beginning executes your
-controller then triggers some more events and you're going to see that to get a
-better view on this event stuff. We can click the events tab and this shows us all of
-the events that were dispatched. So apparently there's an events called `kernel.request`
-That's, that was the first event that was dispatched. And here are all of
-the listeners. So all the functions that were called, uh, that listened to that.
-There's another one called `kernel.controller` and many other ones. And there's
-also a few here for not called listeners.
+Ok: we know that *everything* starts with a request: a request comes into our
+server, it's handled by our application, yadda, yadda, yadda, a response comes
+out... and profit! The goal of this tutorial is simple: find out what *really* happens
+in between.
 
-So the first thing I want to do is actually hook into the request response process.
-Let's create our own listener to this `kernel.request` event. To do that in the
-`src/` directory, I already have an `EventListener/` directory. It doesn't matter where
-you put this class, but inside here let's create a new class called `UserAgentSubscriber`
-All event subscribers need to implement `EventSubscriberInterface`, the
-one from [inaudible] and then I'm going to code generate or Command + N on a Mac and
-go to "Implement Methods" to generate the one method we need which is `getSubscribedEvents()`
-So inside here I'm going to return an array of all the events that I want to
-listen to, which right now is just going to be one. Now you might expect me to say
-`kernel.request`. Normally I'd say `'kernel.request' => 'onKernelRequest'`. That means
-is that I want this when the `kernel.request` event happens, I want Symfony to
-call an `onKernelRequest()` method on this class, which I'm about to create, but this,
-this will work, but this is actually an older way to do it. The `kernel.request`
-method has a new name. It's called `RequestEvent::class`.
+For the homepage, let's find its controller: `src/Controller/ArticleController.php`.
+Here it is: `homepage()`, with the route above it.
 
-Little by little is replacing its event names as simple strings like `kernel.request` 
-It's replacing them with event classes cause it's just a lot easier to work
-with. Next let's create a public function `onKernelRequest()`. And inside of here I'll
-do a dump and die for it's alive and that's all we need. With any luck, it's going to
-call our event listener very early on in Symfony and kill the page. Let clause
-profiler refresh and it's alive. Actually it's not, it's dead. We just had a dump and
-die, but that's fine. So what's logged something inside of here. So I'm okay at a
-public function `__construct()`. I'll type in the `LoggerInterface $logger`, random
-phrase logger and then I'm going to hit, um, I'll enter and go to initialize fields
-to create that property and set it down here. We'll use that to say
-`$this->logger->info()` and we'll say I'm logging super early on the request to show this
-in comparison to the controller.
+The two things that we *know* happen between the start of the request and the end
+of the response, are that the route is matched and then *something* calls our
+controller... probably Fabien personally calls it... I don't know. And then
+our controller always, well *usually*, returns a response. That's what
+`$this->render()` returns.
 
-Let's also go to our controller and go to article controller. And for our homepage.
-Let's also auto wire the logger. Enter the `$logger` object here and I'll do a similar
-thing. I'll say `$logger->info()`, but I'll just say inside the controller so we'd expect
-the listener to be called first because the `kernel.request` event happens, the
-request event happens before the controller. So when you go over and refresh this
-time the page works. I'm going to once again open the profiler and a new tab, go to
-logs and perfect. You can see the log from our events. Describe what happened first
-and then the controller.
+What I want to know is: *who* executes the routing and *who* ultimately calls
+my controller? I want to see the code that does that!
 
-You can also see our subscriber inside of the performance section. Make sure you have
-the threshold down to zero cause it's pretty fast. But let's see. There it is 
-`UserAgentSubscriber` and then down way after that is the controller. What are the other
-properties of an event is whenever you have a listener to an event, your listener
-function's going to be passed in arguments. The nice thing is with these new class
-event names is that the name of the events will match the type of object during the
-past. So I'll say `RequestEvent $event` and let's just `dd($event)` that event in a little
-while. When we dug further into Symfony, we're actually going to see why this
-specific event kit gets that specific.
+## Holder of Secrets: The Profiler Performance Tab
 
-There were not, nevermind.
+To start this journey, go back to your browser and, on the web debug toolbar on
+the bottom, right click on the milliseconds link and open it in a new tab to
+jump into the "Performance" section of the profiler.
 
-Well it's been over. I'll close the profiler again, refresh. And there it is. So
-every event is going to happen, he's going to give you a different object and it's
-always going to contain information that's relevant to that particular situation. So
-for example, this one has the request object on it because if you're listening early
-on in Symfony, there's a good chance that you'll want to use the request object to do
-something. In fact, let's do exactly that. So let me clear out my method here and
-we'll say `$request = $event->getRequest()`, it's a couple of gutters on here. And then
-I'm gonna say `$userAgent`. Let's see if we're going to need the user agent off the
-requests. So that's `$request->headers->get()`, and they'll read the `User-Agent` header
-off of there. And finally, let's log this, `$this->logger->info()`. I'll use `sprintf()` to
-say the user agent is %s and pass the `$userAgent` for that string. So now we'll
-go back, refresh. I'll open the profiler up in a new tab again, go down to logs, and
-there it is right there, logging my user agent before the controller is executed. So
-now that we've done a little bit of work hooking into Symfony, let's step back and
-let's start tracing through what happens inside of Symfony from the very first line
-of code that's executed to the very last. That is our deep dive.
+This screen is *awesome*. It's *meant* to show you where your site might be slow,
+but its *real* superpower is that it can show you *everything* that's happening
+inside of Symfony. The trick is to change this "threshold" input box from 1
+milliseconds down to 0... so that it doesn't hide anything.
 
+Simply gorgeous. This is the request-response process. You can see - kind of in
+the middle here - is our controller: it took 36 milliseconds to execute. You
+can see the Twig templates being executed below it, and even little Doctrine
+queries happening along the way.
+
+The biggest thing I want you to notice is that most of the other lines - both
+before and after the controller - contain the word `Listener`, or sometimes
+`Subscriber`, which is basically another word for "listener".
+
+Because, at a high level, here's what happens inside Symfony: it boots, triggers
+some events, executes your controller, then dispatches some other events.
+
+To get an even *better* view of these events, click... the Events tab! This
+shows all the events that were dispatched during this request. So, apparently
+there's an event called `kernel.request`: that was the *first* event dispatched.
+And here are all of the listeners - so all the "functions" - that were called
+when that event was triggered.
+
+Then there's another event called `kernel.controller`... and many more. You
+can even see listeners for events that were *not* triggered during this request.
+
+So... let's start messing with stuff! Next, let's create our *own* event listener
+and execute code *before* our controller is called.
