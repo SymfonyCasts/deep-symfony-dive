@@ -3,6 +3,7 @@ chapters:
     - event-listener
     - kernel-handle
     - router-listener
+    - request-attributes
     - controller-resolver
     - argument-resolver
     - argument-value-resolvers
