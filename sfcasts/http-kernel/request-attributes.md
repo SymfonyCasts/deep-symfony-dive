@@ -1,92 +1,114 @@
 # Routing Secrets & Request Attributes
 
-underscore, but actually to understand more, let's create a Yammel route by hand to
-see what it looks like. So I'm going to go to config routes side Yammel. Let's
-uncomment are this fake route here, right here. I'll change the path through. Slash.
-Plane. All right, it's over here. I'll open another tab. Go to local was 8,000
-/playing. There we go. So that's exactly what we expected. The name of the route
-under school route and under score controller, but in reality, this controller key
-that you have here, and this is just a shortcut for many for years in Symfony, the
-way that you defined a controller in Yammel was by actually having a default ski here
-and then under that an_controller key set to that. If I go over and refresh now, that
-makes no difference. It turns out that controller key that you can have is simply a
-shortcut for setting defaults, `_controller`.
+This array is the *end* result of the route-matching process. Apparently the router
+returns an array with any wildcard values from the route *plus* keys for the
+route and controller.
 
-Well actually let's take this a little bit further. So first thing, I'm going to add
-a curler grace ID to the end of this, and not surprising, I'll need to go to /plane
-/five now we have an ID inside of this array. Now normally the purpose of defaults
-down here is to give the wildcards a default value. So I can say ID 10 right here and
-now if I just refresh this page, it's still ID five cause I haven't that URL. But if
-I just go to /playing, now it's ID 10 so what we're actually seeing here is that, let
-me add one more thing and then we'll kind of talk about the whole, the picture it
-turns out, but you can actually invent values and put them under unDefault. So I'm
-going to say totally inventing this default. So that's a true, this won't affect how
-the route works at all. It's not going to change how this URL matches. But if we go
-over and refresh, now that's a new key inside of that array. So in reality, this
-array here is a merge of all the values inside the faults, plus all the values inside
-the wild cards. So if I go back to /playing slash, fine, you can see that it includes
-the_controller and he totally inventing this default and it merges that in to the
-real value for the ID wildcard.
+But... it's a bit more interesting than that. A great way to see how, is by
+playing with a route in YAML. Open up `config/routes.yaml`. Uncomment the fake
+route and change the path to `/playing`. Now, on your browser, open *another*
+tab and go to https://localhost:8000/playing.
 
-In annotations, it looks a little bit different, but it's the same thing. We can edit
-the false key here and we can set food to bar. And now if we go over, I'll close this
-last tab. If you go over and refresh, this is the same as before, but except now we
-have a food set bar that's merged into that. So that is the job of the routes to find
-which route matched, but actually returned to us the defaults in that route, which
-includes_controller plus the values inside any of the wild cards. Okay, so let's go
-back to router in the controller. Let's actually remove those defaults. I'll move
-that in the fall. Okay, let's go to router listener. So now that we kind of
-understand a little bit about what this parameters thing is, how is it used? Cause
-right now it's just set to a parameters variable, but you know what's actually going
-on with that.
+That's exactly what we expected: `_route` set to the route name and `_controller`
+set to the controller string from the route.
 
-So I'll remove the DD and let's kind of trace this down a little bit so it does some
-logging of stuff. And here check this out. Request->attributes,->add parameters. So
-back up here for a second. The request object has a number of public properties on
-them in all of the public properties correspond to something on the request on the
-HTTP request, like request->headers is a object that holds all of the headers
-requests.->cookies is a way to get all of the cookies on the request request.->query
-is a way to get all the query parameters on the request. So all of those properties
-correspond to real things on the HTTP request. With the exception of request
-attributes, request attributes doesn't have a real world equivalent. You can't talk
-to a Java developer and say, Hey, what are the attributes on your request? This is
-something totally invented inside of Symfony, and the purpose of this, of the
-attributes on the request is it's a place where you can just store data about your
-request that's specific to your application. So a high level storing the co which
-controller this request should execute is a perfect match for this. A controller is
-not something that makes sense when you're just thinking about HTTP requests and
-responses, but controllers do make sense inside of Symfony.
+## Route Defaults
 
-Okay,
+But in reality, the `controller` key in a YAML route is just a shortcut. In Symfony
+3 and earlier, there *was* no `controller` key. Nope, to define a controller you
+added a `defaults` key and put an `_controller` key below *that*.
 
-so these parameters are attitude request attributes. What does that do right now?
-Absolutely nothing. I just want you to understand that the end result of the routing,
-that array that we saw earlier, this stuff is put onto the request attributes. It
-also says another attribute called_route prams. That's less important that that's
-less important and that's it. That's basically all that the router listener does. So
-I'm going to close robber listener and go back to HTP kernel. So as we saw, there are
-lots of listeners to this request event, but by far the most important one is the
-router listener. So the difference before and after this dispatch line is simply that
-the request attributes have new stuff in it. In fact, let's see this above it. I'll
-dump request->attributes,->all. I'll copy that and we'll dump afterwards. And then I
-will say die. It's a big over right now. I'll refresh the article show page, checked
-it out before we dispatch the event. We have an empty array. After we dispatched the
-event, we have our route controller and our slug said it also stuck a couple of lows
-and said Rob Rams and a couple of other things were added related to security. These
-were also added by other listeners. Not important right now for understanding the
-request and response flow.
+Move over and refresh now. We get the *same* array! Interesting. The `controller`
+key is really just a shortcut for setting an `_controller` *default* value on the
+route.
 
-I'll remove all those dumps and dies. So next we're going to see why that's important
-because ultimately we know Symfony needs to somehow we're gonna see why that's
-important. But before we get there, I want to show you a cool thing related to
-routing. When you actually execute the router, like we just saw in router listener,
-if you look in your VAR cache dev directory, you're going to find a file in here
-called URL matching routes. .php. This is a file that was automatically generated
-by Symfony from your routes. It's an insane file. This dumps a bunch of metadata
-about your routes, including this crazy list of regular expressions down here. And
-this is actually used by the router at runtime and it's as a super efficient way to
-find exactly which route matched. So all these regular to this regular expression
-here is actually run against the URL, and that's how it matched up down here. So the
-Symfony routing layer is incredibly fast because this crazy dumped file is used by
-the router internally. Anyways, next, let's see the significance of those requests.
-Attributes as we continue to look down the HTP kernel function.
+This is actually an important point, but to see why, let's go a bit further. So
+first, add a `{id}` wildcard to the end of this. At your browser, add a `/5` to
+the end of the URL and... yep! The array now has an `id` key - no surprise.
+
+*Normally*, the purpose of `defaults` on a route are to give a default value for
+a *wildcard*. If we say `id: 10`... and then refresh, the array still contains 5
+because *that's* what's in the URL. But thanks to the default, *now* we can *just*
+goto `/playing` and... the id uses the default `10`.
+
+Cool. But what if we just... *invented* a new key and put it here? Try it:
+`totally_inventing_this_default` set to `true`.
+
+This won't change how the route *matches*, but it *does* change what we get back
+in the array. Refresh. Yep! The `totally_inventing_this_default` key is now inside
+the returned array!
+
+So here's the *full* story of what the route matching process returns: it returns
+an `array_merge` of the route defaults and any wildcard values in the route....
+plus the `_route` key... just in case that's handy.
+
+With route annotation, it looks a bit different, but it's the exact same. We can
+add a `defaults` key and set `foo` to `bar`. Back in the browser, close the last
+tab and refresh the article show page. Yep! We suddenly have a `foo` key. On the
+route, remove that `defaults` key.
+
+## Request Attributes
+
+So why is it so important to understand exactly *what* the route-matching process
+puts inside this array? We'll find out soon. But first... back in `RouterListener`,
+let's find out what this class *does* with this `$parameters` array.
+
+Remove the `dd()`... and let's follow the logic. It does some logging and... here
+it is: `$request->attributes->add($parameters)`. *This* is important.
+
+Let's back up for a second: the `Request` object has several public properties
+and *all* of them - except one! - correspond to something on the HTTP request.
+For example, `$request->headers` holds the HTTP request headers, `$request->cookies`
+holds the cookies, and there are others like `$request->query` to read query
+parameters. The point is: *all* of this refer to some real "part" of an HTTP
+request. You could talk to a Java developer about HTTP headers and they would
+know what you're talking about.
+
+The *one* exception is `$request->attributes`. This property does *not* correspond
+to any *real* part of the HTTP request. If you ask that *same* Java developer:
+
+> Hey! What are the attributes on your request?
+
+They'll think you're nuts. Nope, the Request attributes are something totally
+invented by Symfony. The *purpose* of the request attributes is to be a place
+where you can store data about the request that's specific to your application.
+So, storing the *controller*, for example, is a perfect fit! That's *completely*
+a Symfony concept.
+
+Anyways, the array of `$parameters` from the router are added to the
+`$request->attributes()`. What does that... do? Absolutely nothing. Soon,
+something *else* will *use* this data, but at this moment, this is *just* data
+sitting on the request.
+
+It also set another attribute `_route_params`, but that's not really important.
+
+## After kernel.request... we have Request Attributes!
+
+Ok! `RouterListener` done! Close this class and go back to `HttpKernel`. So as
+we saw, there are a lot of listeners to the `kernel.request` event, but by *far*
+the most important one is `RouterListener`. So what *changed* in our system
+before and after this `dispatch()` line? Basically *just* the request attributes.
+
+In fact, let's see this. Above dispatch, `dump($request->attributes->all()`. Then
+copy that... dump after, and `die`. Refresh the article show page. Yep! Before
+we dispatch the event, the attributes are empty. After? We have `_route`,
+`_controller`, `_slug` and hey! A few *other* things were also added by *other*
+listeners related to security. That's not important for us - but still, interesting!
+
+Remove all that debug code.
+
+## Seeing the Dumped Route
+
+Before we find out *how* the request attributes are used, I want to show you
+something kinda cool. We're going to look at a cache file: `var/cache/dev`...
+and then `url_matching_routes.php`.
+
+This is file is automatically generated by Symfony and is the *end-result* of
+*all* of the routes in our application. This file is *insane*. After reading
+our routes, Symfony generates a huge list of regular expressions and which route
+should match which part, and dumps them to this file. This is used by the
+route-matching process to make that process *blazingly* fast. It's pretty
+amazing.
+
+Anyways, next! Let's see the significance of those Requests attributes by
+continuing to go through the `handleRaw()` method.
