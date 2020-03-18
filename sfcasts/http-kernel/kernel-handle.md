@@ -1,74 +1,98 @@
-# Kernel Handle
+# index.php to HttpKernel::handle()
 
-Coming soon...
+Let's start from the *very* beginning of the request. When we load a page, the
+*first* file that's executed is `public/index.php`. No matter what, this is where
+it all starts. So let's literally go through this file line by line and see what
+happens.
 
-Let's start from the very beginning of the request. Whenever reload any page. The
-first file it's executed is `public/index.php`. No matter what, this is where it
-all starts. So let's literally just go down this line by line and see what happens.
-The first thing it does is require this `config/bootstrap.php`. For our purposes,
-this isn't that important. It requires the composer auto loader, which is super,
-which is great, and then the rest of this file is all about, it's kind of loading and
-normalizing environment variables. So environment variables are very important for
-Symfony as far as understanding the request and response flow. This is just set up
-work. The next thing it does is if we're in debug vote, it calls `Debug::enable()`
-That's great to set up some debugging tools, but it's not
-really that important. The first thing we care about is down here, 
-`$kernel = new Kernel()`. This is actually instantiating our `src/Kernel.php` file, 
-the Kernel and Symfony is the, the kernel is the heart of Symfony.
+## index.php Bootstrapping
 
-It handles everything and that's what we're going to see. Now notice the `Kernel` is
-past the environment as the first argument and a debug flag as a second argument.
-Okay, and that's something that's very important for how Symfony works because that
-dictates a lot of it's behavior, but for our purposes it's not really that important.
-The next line is very important. We always knew that there was a request object and
-Symfony. If you ever wondered who creates the request to object or where did it come
-from, it actually comes from this one line. This is Symfony creating the request
-object. This `::createFromGlobals()` method. I'll hold command or control to
-open. That is a shortcut that actually uses the normal below super global variables
-in PHP to create a request object. So we give it this nice `Request` object that
-contains all that represents the current request information.
+The first thing it does is require this `config/bootstrap.php` file. For our purposes,
+this... isn't that important. It requires the composer autoloader... and then the
+rest of this file is all about loading and normalizing environment variables. Sure,
+environment variables *are* important to Symfony, but if you want to understand
+the request-response flow, this is meaningless.
 
-The next line is probably is probably my favorite line in all of PHP 
-`$response = $ernel->handle($request)` that runs our application. We don't know yet what happens
-inside of there. That's what we're going to figure out, but isn't it gorgeous? Our
-entire application instead of being some weird global monster that we can't
-understand how it works. Our entire application is a pure function input request,
-output response. In fact, one of the properties of pure functions like this is that
-you can call them as many times as you want. So in theory a single `Kernel` can handle
-multiple requests. In fact, let's do that. Up here I'm going to say 
-`$request1 = Request::create()`, which is just a shortcut to create a the requests object
-and let's pretend that I'm creating a `Request` object for our login page. So `/login`
-and below that I'm going to create a `$request2`, and we will send that, we'll pretend
-that that is a request for `/register`. I'll check this out. I'll say 
-`$response1 = $kernel->handle($request1)` and then I'm gonna call handle again. 
-`$response2 = $kernel->handle($request2)`. They'll show you what happens here on the bottom. I'm
-going to `dump($response1)`, `dump($response2)` and then let's put a `die` statement.
+Next, if we're in debug mode, it calls `Debug::enable()`. That's great to set up
+some debugging tools... but not relevant for us.
 
-So if you go over here and refresh, check this out. We just dumped two different, we
-just have two different requests on the same page. You can see the first one is for
-the login page, title login, and the second one is for the registration page. That is
-huge. And this idea of handling multiple requests and Symfony is something that
-really happens. It's something that happens with sub requests, which is a topic that
-we are going to cover in this tutorial. And also that other library that I need to
-double check if this is true. Um, loads Symfony ones and then handles metal requests,
-uh, to be super performance.
+## Hello Kernel
 
-Remove all of this code. All right, so really if we want to understand what happens
-in Symfony, we need to understand what happens inside of this `$kernel->handle()` method.
-We're going to be doing a lot of opening core files, so make sure that you have a
-keyboard shortcut, um, to, uh, open a file in your project. In my case impedes your
-storm, I'm gonna hit shift shift and I'm gonna open a class called `HttpKernel`.
-Technically the `$kernel->handle()` goes to a different class, but that class eventually
-really calls `HttpKernel` in. This is where all the magic is.
+The first thing *we* care about is down here: `$kernel = new Kernel()`. This is
+actually instantiating *our* `src/Kernel.php` file, which is the *heart* of our
+application.
 
-If we scroll down a little bit, here it is `Kernel->handle()`, and the first thing
-you'll see here is nothing really happens in this method except it surrounds
-everything by a try catch. So almost immediately when our application starts running,
-our code is surrounded by a try catch. We're going to come back to what that does
-later, but the real logic is in this `handleRaw()` method. So scroll down a little bit
-further to find, `handleRaw()`. This is the Symfony framework. These 50 lines of code or
-so are the heart of everything that happens in Symfony and not just Symfony. These
-same 50 lines of code run Drupal, these same 50 lines of code run PHP. These same 50
-lines of code run any application that uses Symfonys, HttpKernel. So next, let's
-start going through this. Find out how Symfony framework works under the hood.
+The `Kernel` is passed the environment as the first argument and a debug flag as
+the second argument. That controls aa *bunch* of behavior - but isn't very important
+to the request-response flow.
 
+The next line *is* very important. We always knew that there was a `Request` object
+inside Symfony. If you ever wondered *who* creates the `Request` and *where*, here
+is your answer: it's created in *our* code - not somewhere in core.
+
+The `::createFromGlobals()` method - I'll hold command or control to open that
+method deep inside Symfony - is a a shortcut to create the `Request` object and
+populate its data with the normal superglobal variables, like `$_SERVER` and
+`$_POST`. This gives us a nice `Request` object that represents the current request
+info.
+
+## HttpKernel::handle(): Our App in One Method
+
+The next line is probably my *favorite* lines of code in all of PHP:
+`$response = $ernel->handle($request)`. *That* runs our app. We don't know exactly
+what happens *inside* of that method - that's what we're going to figure out - but
+isn't it beautiful? Our application & Symfony are *not* some weird, global monster
+that takes over our PHP process. Nope, it's a pure function. Input `$request`,
+output `$response`... which is *exactly* what our job as a developer is! Understand
+the incoming request, and use that to create a response.
+
+One of the properties of "pure" function like this is that you can call it as many
+times as you want. So yes, in theory, a single `Kernel` can handle *multiple*
+requests. In fact, let's do that!
+
+Up above, let's say `$request1 = Request::create()` - which is another shortcut
+to create a `Request` object - and let's make this look like a Request for our
+login page. Pass `/login` as the first arg.
+
+Now create a `$request2` and pretend that this is a request for `/register`.
+
+Could we run our app and get the responses for both of these requests? Yep!
+`$response1 = $kernel->handle($request1)`... and then
+`$response2 = $kernel->handle($request2)`. Let's see what they look like:
+`dump($response1)`, `dump($response2)` and then `die`.
+
+Let's see this! Move over, refresh and... check it out! We just handled *two*
+different requests on the same page! The first *does* contain the HTML for the
+login page, and the second... for the registration page. Amazing.
+
+And this idea of handling multiple requests in Symfony is something that really
+*does* happen! It happens with sub-requests - a topic that we will cover later in
+this tutorial. And some people use an event loop in PHP to boot use a single
+kernel to handle *many* requests.
+
+Ok, remove all of this code. It's now obvious that if we *really* want to understand
+what happens inside Symfony, we need to understand what happens inside of this
+`$kernel->handle()` method. We're going be opening a *lot* of core files, so make
+sure you have an easy way to "jump to a file" by filename in your project. In
+PhpStorm, I can hit Shift+Shift to open a file called `HttpKernel.php` that lives
+*deep* inside Symfony. And... scroll down to the `handle()` method.
+
+## Hello HttpKernel::handle()
+
+Ok, *technically* the `$kernel->handle()` method we saw in `index.php` is *not*
+the `handle()` method in this class. Symfony *first* initializes the dependency
+injection container - the topic of a future deep-dive tutorial - and *then* calls
+this method.
+
+The *first* thing I want you to notice is that this *entire* method is surrounded
+by a try-catch block. So almost *immediately* when our application starts running,
+our code is surrounded by a try catch. That's not important *yet*. But later, we'll
+see what happens when an exception is thrown from *anywhere*.
+
+The *real* logic of `HttpKernel` lives in this `handleRaw()` method. Scroll down
+a little bit to find it. Ah yes: `handleRaw()`. *This* is the Symfony framework.
+These 50 lines of code are the heart of *everything* that happens in Symfony. And
+not just Symfony: these *same* 50 lines of code run Drupal, and phpBB and many
+other things!
+
+Next: let's start our journey through this method.
