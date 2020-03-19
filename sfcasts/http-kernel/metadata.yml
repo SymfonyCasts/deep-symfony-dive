@@ -6,6 +6,7 @@ chapters:
     - request-attributes
     - controller-resolver
     - controller-setup
+    - controller-container
     - argument-resolver
     - argument-value-resolvers
     - view-event

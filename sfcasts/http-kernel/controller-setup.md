@@ -1,103 +1,118 @@
 # Who Creates the Controller & Gives it the Container?
 
-and it passes
-that controller. So let's trace this down here. `createController()` is also inside of
-here. Here we go. protected function `createController()`. So we're past the string
-controller. It needs a transformer. So the first thing it does is it checks to see if
-the a string does not have a :: it in the middle. If it does not have a
-:: we are actually seeing here is an invoke double controller. This is
-something that some people are doing in the Symfony world where your controller class
-has an `__invoke()` method. And then when you set up your routing, your routing
-string is literally just the controller class. You don't need to have a method name.
-This is actually not so different from the case we're at right now is there's just no
-method named part and so it goes and calls and stand J controller on it immediately.
-We're going to look at that method in a second, but since we do have a controller, I
-:: in the middle of ours. It explodes those and separates them into the
-class and the method.
+In a Symfony app, this `$controller` variable is in the string format that comes
+from the router - something like `App\Controller\ArticleController::homepage`.
+This function - the `getController()` method of the `ControllerResolver` has one
+simple job: it needs to *transform* that string into a PHP *callable*. To do that,
+it calls `createController()`.
 
-Then ultimately down here it puts the controller into a callable Caldwell syntax,
-which is an array where the first item here is going to be an object. And the second
-Igon item is going to be these string method to get the object, it passes the class
-to an instantiate controller, a method. So quite literally it's going to need, this
-method is responsible for taking the controller class and turning it into an object.
-This method is overwritten in the child class. So let's go back to `ContainerControllerResolver`
-and look at create, `instantiateController()`. Awesome. So check out. It checks
-to see if the class is in the container and if it is, it fetches it from the
-container and returns it.
+## Invokable Classes
 
-This is what's happening. In our case, our controller is a service, in fact, pretty
-much everything in the source directory as a service. Thanks to the
-`config/services.yaml` file. Thanks to this import right here. Everything in the
-`App\Controller\` directory is a service, so it is fetching it from a service. This works
-because the class name of our controllers matches this service ID, so there literally
-is a service and the container whose ID is `App\Controller\ArticleController`. It
-also works because the controller services are public. They're the only services in
-the container at this point that are always public. You don't really see this in
-`services.yaml`, but this tag here, I'm going to talk more about what this tag does,
-but one of the things it does is it makes sure that all the services inside the
-`Controller/` directory are public so that they can be fetched out of the container
-right here.
+Let's scroll down to find this method. Here it is:
+`protected function createController()` with the string `$controller` argument.
+The *first* thing it does is to *check* to see if the the controller does *not*
+have a `::` in the middle. If it does *not* have a `::`, the controller is
+actually an *invokable* class. This is a strategy for controllers that some people
+in the Symfony world are using - it's especially popular in ApiPlatform. The idea
+is that each controller class has only *one* controller method - called `__invoke()`,
+which makes an instance of that object *callable* by PHP. If you use invokable
+controllers, then your `$controller` string is *just* the class name part - there's
+no method name needed.
 
-So this is the situation we fall in. If for some reason the art classes not inside
-the container, then it calls `instantiateController()`, which is basically cause
-`parent::instantiateController()`, which is basically a fancy way of just instantiate in the
-class with no arguments. But at this point that's basically legacy. So this is all a
-long way of saying, if we kind of trace this back up here, in our case it get our
-controller string right here. It's split into two pieces. We fetched the service out
-of the container and ultimately it's returned as a callable format. So controller is
-all returns callable. I'm actually going to close `ControllerResolver`, both
-controllers solvers and back in `HttpKernel` on what we have here is a controller. Now
-in our case, we'll be in a call before Matt. In fact, let me show you that. Let's
-`dd($controller)` after we've gotten a controller to go over and refresh, I'm going to have
-this string is now in an array. Zero index is an `ArticleController` object. And the
-first thing is this, the string `homepage`. So I'll go and remove that `dd()`. So this is
-beautiful. Our controller is a boring service object. There's nothing special about
-it at all. It's a service just like everything else in our application and that's why
-if we want to, we could go do a constructor of a service and we could autowire
-services out of there cause that's just normal auto wiring. I'll hit Alt + Enter and
-go to initialize fields to create that property and set it and just to prove it's
-working. I'll say `$this->lager->info('Controller instantiated!')`.
+How Symfony handles invokable controllers is actually *pretty* similar to how
+it will handle *our* situation: we'll see that `instantiateController()` method
+in a moment.
 
-So if we go over it now refresh, I'll click any of the icons down here to go into my
-profiler. Click on logs and cool. This is getting really, really kind of fun. Now we
-have the user agent log, which is coming from our subscriber to the kernel, that
-request event. Then you can see our current controller is instantiated and then later
-our controller is actually executed. Pretty cool. But if our controller is just a
-boring service, it doesn't explain one thing specifically. This controller's full of
-these shortcut methods like `$this->render()`. How does that work? I'm going to command or
-control it and click that `render()` function. The render function calls another method
-called `renderView()`. That's actually right above and check this out. When we call
-render it calls render view, it fetches twig out of the container. So hold on a
-second.
+## Instantiating the Controller Object
 
-How did our controller service get access to the container? Because it's not like we
-are injecting the container via auto wiring or something like that. So how is it
-doing this? To make matters more interesting, if you search for parameter parameter
-bag inside of here, one of the other circle methods is called gate parameter. This
-parameter bag service you spend over to your terminal and run
+Because our controller *does* have a `::` in the middle, it *explodes* the two
+parts: everything before the `::` is assigned to a `$class` variable and everything
+after is set to a `$method` variable. Then, inside the try-catch, it *puts* this
+into a callable syntax, which is an array where the first item will be an object
+and the second is the string method name. I know, PHP is weird: but this type of
+syntax *is* callable.
 
-```terminal
-php bin/console debug:container parameter_bag
-```
+Of course, on this line, `$class` is *still* just a string. To *instantiate* our
+controller, it calls... well... `instantiateController()`!
 
-It's public false. It's not a service that you should be
-able to fetch out of the container by saying this air container arrogant parameter
-back. So what the heck is going on here? The answer is that because our controller
-extends this `AbstractController`, `AbstractController` implements a special interface
-called `ServiceSubscriberInterface`. This is actually something we talked about in
-our, one of our doctrine tutorials. When you implement `ServiceSubscriberInterface`,
-it forces you to have a method called `getSubscribedServices()` where you actually
-return a big array that says which services you want inside of this class.
+What... does this class do? This method is *overridden* in the child class. Go
+over to `ContainerControllerResolver` and find `instantiateController()`. Awesome!
+It checks to see if the class is in the *container*. And if it is, it doesn't
+instantiate the controller itself: it *fetches* it from the container and returns
+it.
 
-The end result of this is that you're past a mini container that contains all these
-services. So if I go to the top here, see this `ContainerInterface`, that's not the
-real container, that's a mini container which contains the things down here. That is
-what allows us to fetch those things out of that mini container. This gives our
-controller super powers and it also allows it to fetch these services at lazily. It's
-not, it doesn't instantiate all these services, uh, until we actually ask for them.
-The nice thing is this is not something special at the controller. This is something
-that any service can implement in your system. So once again, our controller is just
-a good old boring service. So next, we now know that we have a controller executable.
-So let's keep tracing down this function to see what happens next, because one of the
-big missing things right now is what arguments Symfony should pass when it calls our
-controller function. That's next.
+## How your Controller is Fetched from the Container
+
+*This* is what's happening in our case: our controller is a *service*. In fact,
+pretty much *everything* in the `src/` directory is a service... or at least,
+is *eligible* to be a service - we'll go deeper into that in the next deep dive
+tutorial. That's thanks to the `config/services.yaml` file. This section
+auto-registers everything in the `src/Controller` directory as a service.
+
+So... our controller is a service... and `ContainerControllerResolver` fetches
+it from the container. But this *only* works because the class name of our
+controllers *matches* the service id. So there is *literally* a service in the
+container whose id is `App\Controller\ArticleController`. There's some teamwork
+going on here: the annotation routes automatically set the controller string to
+the *class* name... and because that's *also* the id of the service, we can fetch
+it out without *any* extra config.
+
+So the truth is, your controller syntax isn't *really* `ClassName::methodName`.
+It's `ServiceId::methodName`. If your controller service had a *different*
+id for some reason, that's ok! In that case, you would set your controller
+to your *service* id `::` then method name in YAML. There's also a way to do this
+in annotations.
+
+Fetching your controller from the container *also* works because controller services
+are *public*. Really, they're the *only* services that we create that are public.
+If you look back at `services.yml`, it's not immediately obvious *why* they're
+public - I don't see a `public: true` anywhere. I'll save the details for the
+*next* deep-dive tutorial, but it happens thanks to this *tag*. *One* of the things
+it does is make all of these services *public* so that the
+`ContainerControllerResolver` can fetch them directly.
+
+## The Old Way: Direct Instantiation
+
+If, for *some* reason, your controller is *not* registered as a service, then it
+calls `parent::instantiateController()`, which... could not be simpler: it says
+`new $class()` and passes it *no* arguments. That's basically legacy at this
+point - it's how controllers we created *prior* to Symfony 4.
+
+## The Final Callable Controller Result
+
+Scroll back up in `ControllerResolver` to `getController()`. This is all a
+*long* way of saying that our controller string - this
+`App\Controller\ArticleController::homepage` - is split into two pieces, the
+service is fetched from the container, and it's returned from here in a callable
+format.
+
+Let's see this. Close both the controller resolver classes and head back to
+`HttpKernel`. Let's see what this final *controller* looks like. After the `if`,
+`dd($controller)`.
+
+Ok, move over and refresh. That's it! The weird PHP callable syntax: an array
+where the `0` index is an `ArticleController` *object*, and the `1` index is
+the string `homepage`.
+
+Go ahead and remove that `dd()`. So... this is *beautiful*. Our controller is
+a *boring* service object: there's nothing special about it at all. Need to use
+a service like the logger? No problem! In `ArticleController`, add another
+argument to the constructor: `LoggerInterface $logger`. I'll hit Alt + Enter and
+go to "Initialize fields" to create that property and set it. And just to prove
+it's working, in `homepage`, let's say
+`$this->logger->info('Controller instantiated!')`.
+
+Move over, refresh click a link to open the profiler, and go to the Logs section.
+*Cool*. The first log is from our listener to `kernel.request`, then our controller
+is instantiated and *then* it's executed.
+
+So yea! Our controller is a *boring* service. Well, it *does* have that superpower
+where you can autowire services into controller *methods* - but we'll learn how
+that works in a few minutes.
+
+I *do* have one more question, though. The controller is full of shortcut methods
+like `$this->render()`. How does that work? We never injected the `twig` service...
+so how is our boring, normal service using something that we didn't inject? How
+is it getting the `twig` service?
+
+Let's dig into this mystery next!
