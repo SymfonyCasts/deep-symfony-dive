@@ -5,6 +5,7 @@ chapters:
     - router-listener
     - request-attributes
     - controller-resolver
+    - controller-setup
     - argument-resolver
     - argument-value-resolvers
     - view-event
