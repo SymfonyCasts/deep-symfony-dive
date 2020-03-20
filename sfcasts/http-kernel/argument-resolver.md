@@ -1,99 +1,129 @@
-# Argument Resolver
+# The Argument Resolver
 
-Coming soon...
+Inside `HttpKernel`, we now have the controller. But before we run around excitedly
+and try to *call* that controller... we need to figure out what *arguments* to pass
+to it.
 
-Inside of `HttpKernel`. We now have the controller, but we still need to figure out
-what arguments to pass when we call the controller. Now to make this a little bit
-more a little bit better for now, one of the things we know that we can do with the
-controller is that we can type into an entity like `Article` and in something will
-automatically query for that `Article` by its slug. I'm going to temporarily remove
-that when I put it back later and explain how it works. So in the places where they
-slept, arguments also going to add an `ArticleRepository $articleRepository`
-argument. So it, it's weird for it and I'll say 
-`$article = $articleRepository->findOneBy(['slug' => $slug]);`
-And then because we're handling this ourselves, I mean to say if not `$article`,
+To help see this clearly, in `ArticleController::show()`, I want to make one
+small change. Instead of having an argument type-hinted with `Article` and allowing
+Symfony to automatically query for it by the slug, let's temporarily do this manually.
+Remove that argument and replace it with `$slug`. Now add another arg:
+`ArticleRepository $articleRepository` so that we can make the query:
+`$article = $articleRepository->findOneBy(['slug' => $slug])`.  And then, if
+*not* `$article`, `throw $this->createNotFoundException()`.
 
-don't throw `$this->createNotFoundException()`. So this is basically, this is
-equivalent to what we just had a second ago. We'll just make for a better example. By
-the way, if we know that this line here is going to turn into a 404 if you
-hold command or control and click into this, you'll find that this throws an
-exception, a `NotFoundHttpException`, which for some reason is going to result in
-the page being a 404 response code. By the end of this tutorial, we'll know
-exactly why this exception is mapped to a 404 anyways, let's go back to 
-`HttpKernel`. Now that we've figured out what the controller is, the next thing that
-happens in the Symfony is it dispatches another event. This one's called `ControllerEvent`
-so keeping score here we have so far dispatched an event, found the
-controller, and dispatched another event, and that's it on this one, nothing really
-important happens from the perspective of the framework. If I refresh the article
-show page and then click to open the profiler, I'll go back to the events and down
-here we can say `kernel.controller`. So there's six events here, but nothing
-that's very, very important. A couple of them come from `FrameworkExtraBundle`, that
-power. Some of it's magic. We'll talk about those later.
+Functionally, this is identical to what we had before... but it'll help us with
+our deep-dive. By the way, we know that this `createNotFoundException()` line will
+result in a 404 page. If you hold Command or Ctrl and click into that method, it
+returns a `NotFoundHttpException`. So... for *some* reason, *this* specific response
+maps to a 404... while *most* exceptions will cause a 500 page. By the end of
+this tutorial, we'll now *exactly* why this happens.
 
-One of the things that a listener can can do, can do on this event, those not very
-common is replace the controller. You see down here it says 
-`$controller = $event->getController()`. Cause if you hold command and open that 
-`ControllerEvent`, it actually has a `setController()`. So it's possible for a listener 
-on this event to completely replace the controller for some reason. All right, 
-so after this whole point, this is the missing piece here. We need to know what 
-arguments we're going to pass to our controller. It does that by calling something 
-called the argument resolver, and it's pretty cool. It calls `getArguments()`, it passes 
-the `$request`, it passes the `$controller` executable, and it says, Hey, give me all the 
-arguments I should pass to this function. So let's open up this argument resolver. 
-I'll hit shift shift and it's literally going to be called argument is all 
-`ArgumentResolver.php`.
+## The kernel.controller Event
 
-And I'll open that and find the `getArguments()` method. Okay, so interesting. First
-thing it does is if for each is over `$this->argumentMetadataFactory->createArgumentMetadata()`
-meta-data as a `$metadata`, but that is actually doing is it's looping over all of the
-arguments to your controller. So in this case it would have, it would loop over three
-times for our show page and then it's looping over something else for each argument.
-It's looping over something else called the `argumentValueResolvers`. So let's just
-see what's going on here. Inside the first loop, I'm going to `dd()` this `$metadata`. So
-DDB thing that we're looping over, let's pick over and let's refresh the article
-page. Okay, so apparently it's this `ArgumentMetadata` object, which contains the
-name of the argument `slug` because that is the name of the first argument. And then
-other information like the `type`, which in this case is `null`, but for the second
-argument it would be `SlackClient`.
+Go back to `HttpKernel`. Now that we've figured out what the controller is, the
+next thing that happens is... we dispatche another event! This one is called
+`KernelEvents::CONTROLLER`, which maps to the string `kernel.controller`.
 
-And then other information like is very attic has `defaultValue` `isNullable`, other
-things. So it's kind of cool. It's just a bunch of metadata about that argument. And
-in this case, this will loop over three times. It would get a metadata object for
-each of our three arguments, so that's the first thing to understand. Now let's
-replace this `dd()`. Let's figure out what these argument value resolvers are. So this is
-actually an iterator. You look up here, it's an `Iterable`, which is basically a fancy
-array. If I'm going to call it `iterator_to_array($this->argumentValueResolvers))`.
+So let's look at *everything* we've done so far: we dispatched an event, found
+the controller, then dispatched another event. That's *it*.
 
-So now we go over and refresh, we get seven of them. They're all inside of this
-`TraceableValueResolver`, but if you look inside, let me open a couple of these.
-You'll find that we have something called a `RequestAttributeValueResolver`
-`RequestValueResolver`, a `SessionValueResolver`. These are a bunch of different
-classes that help figure out which arguments to pass to our controller. Another way
-to see this full list by the way, is to fund your terminal rugby 
+There are no particularly important listeners to this event, from the perspective
+of how the framework operates. Refresh the article show page... and click to open
+the profiler. Go to the Events tab... and find `kernel.controller`.
+
+In this app, there are 6 listeners... but nothing too important. A few of them
+come from `FrameworkExtraBundle`. That bundle gives us a *lot* of magic shortcuts,
+which rely *heavily* on listeners. We'll talk about how some of those work later.
+
+One of the things that a listener to this event can do is *change* the controller.
+It's not very common, but you can see it down here:
+`$controller = $event->getController()`. Hold Command or Ctrl to open the
+`ControllerEvent` class. Here it is: a listener can call `setController()` to
+*completely* change the controller to some other callable.
+
+## The Argument Resolver
+
+Ok, back in HttpKernel after the `kernel.request` "hook point", this next line
+is the missing piece: we need to know what arguments we should pass when we call
+the controller. To figure that out, it uses something called the "argument resolver".
+And it's pretty cool... we call `getArguments()`, pass it the `$request` and
+`$controller` and it - *somehow* - figures out all the arguments that this controller
+should be passed.
+
+Ok, you know the drill: let's open this thing up and see how it works! This time,
+the class is simple: I'll hit Shift+Shift and open a file called
+`ArgumentResolver.php`. Then find the `getArguments()` method.
+
+Okay, so interesting. It *first* uses a `foreach` to loop over
+`$this->argumentMetadataFactory->createArgumentMetadata()` as `$metadata`.
+This is actually looping over the *arguments* of the controller. So for the show
+page, this would loop 3 times: one for each argument.
+
+## The ArgumentMetadata
+
+Then, *inside* that loop, it does another: it does a `foreach` over something
+called `argumentValueResolvers`. Let's see what's going on here. Inside the
+first loop, `dd()` the `$metadata` variable - this should be *something* that,
+sort of, represents a single argument.
+
+Ok, move over and refresh. Huh. Apparently this is an `ArgumentMetadata` object,
+which holds the name of the argument - `slug`... because that's the name of the
+first argument to the controller. It also holds the argument the `type`, which
+in this case is `null`. For the second argument it would be `SlackClient`.
+And other information, like if the argument has a `defaultValue` or `isNullable`.
+
+That's... pretty cool! It's *all* the metadata about that argument. What does
+it *do* with that metadata?
+
+## The Argument Value Resolvers
+
+Clear out the `dd()`. Let's figure out what these `$argumentValueResolvers` are.
+This argument is actually an iterator - it has an `iterable`... which is not
+important except that we need to get fancy to see what's inside.
+`dd(iterator_to_array($this->argumentValueResolvers))`.
+
+Move over and... 7 items! Each object is being decorated by a
+`TraceableValueResolver`. But if you look inside... I'll expand a few of these,
+you'll see the *true* object: `RequestAttributeValueResolver` `RequestValueResolver`,
+a `SessionValueResolver`. *These* are the objects that help figure out what values
+to pass to each controller argument.
+
+Another way to see this full - since this is a deep-dive tutorial - is to find
+your terminal and run:
 
 ```terminal
 php bin/console debug:container --tag=controller.argument_value_resolver
 ```
 
-because the way you add an argument resolver, if you want to do a custom one, we will
-do that later is by creating a service and giving it this tag. So this dumps us all,
-uh, all of our um, RJ resolvers and they're all decorated in this 
-`TraceableValueResolver`
+Because if you want to create your *own* argument value resolver - we'll do that
+later - you need to create a service and give it *this* tag. This gives us the
+same list - but it's a bit easier to see the *true* names: some `request_attribute`
+resolver, `request` resolver, `session` resolver, `user_value_resolver` and more.
 
-But this gives you a better idea. We have something called the  `RequestAttributeValueResolver` 
-`RequestValueResolver`, `SessionValueResolver` over `UserValueResolver`, a whole bunch of 
-different things. We're going to walk through some of the most important ones these
-next. But before we do that, let's just go back and look how they work. So on high
-level, we're looping over each argument here and then we move over every single
-argument or resolver and we say we may and we call a `support()` method. So one by one we
-call these argument resolvers and we say, Hey, for this argument, you know, for the,
-for an argument called a `slug` or an argument called `slack`, Slack with a `SlackClient`
-type int, do you support figuring out what value should be past that argument? And if
-it returns, if an argument resolver returns false, then it just continues onto the
-next one. If it returns true, then it calls `$resolver->resolve()`. And it
-basically says, okay, give me the value that she passed to that argument. So at the
-end, so hopefully by the end of looping through all of these argument resolvers, one
-of them has figured out what value to pass for it. So next, let's look through the
-most important argument resolvers and figure out what, what all the possible values
-are to the arguments to our controller.
+We're going to walk through some of the most important values resolvers next.
 
+## How Argument Value Resolver Works
+
+But before we do, let's go back and... see how this system works! We loop over
+each argument... and then loop again over every argument value resolver and
+then call a `supports()` method on each. So, one-by-one, we ask each argument
+value resolver:
+
+> Hey! Do you know what value to pass for a `$slug` argument with no type-hint?
+
+Or, on the next loop,
+
+> Yo! Do you know what value to pass to a `$slack` argument with a `SlackClient`
+> type-hint?
+
+If an argument resolver returns `false` from `supports()`, then it continues onto
+the next one. If it returns `true`, it *then* calls `$resolver->resolve()` to get
+the value.
+
+So hopefully by the end of looping through all of these argument value resolvers,
+one of them has figured out what value to pass to the argument.
+
+Next, let's open up the *most* important argument value resolvers and figure out
+what they do. This will answer the question: what are *all* the possible arguments
+that a controller is allowed to have, and why.
