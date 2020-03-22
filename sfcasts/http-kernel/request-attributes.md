@@ -93,7 +93,7 @@ request attributes.
 In fact, let's see this. Above dispatch, `dump($request->attributes->all()`. Then
 copy that... dump after, and `die`. Refresh the article show page. Yep! Before
 we dispatch the event, the attributes are empty. After? We have `_route`,
-`_controller`, `_slug` and hey! A few *other* things were added by *other*
+`_controller`, `slug` and hey! A few *other* things were added by *other*
 listeners related to security. That's not important for us - but still, interesting!
 
 Remove all that debug code.
