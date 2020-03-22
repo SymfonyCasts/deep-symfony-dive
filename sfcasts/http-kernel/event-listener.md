@@ -6,8 +6,8 @@ Let's create our own *listener* to this `kernel.request` event. To do that, in t
 *where* we put this class, but inside here, let's create a new class called
 `UserAgentSubscriber`.
 
-All event subscribers must implement `EventSubscriberInterface`, the one from
-HttpKernel. I'll go to the Code -> Generate menu on PhpStorm - or Command + N on
+All event subscribers must implement `EventSubscriberInterface`.
+I'll go to the Code -> Generate menu on PhpStorm - or Command + N on
 a Mac - and select "Implement Methods" to generate the one method this interface
 requires: `getSubscribedEvents()`. Inside, return an array of *all* the events
 we want to listen to, which will just be one.
