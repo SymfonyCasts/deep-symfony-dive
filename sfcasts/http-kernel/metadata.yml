@@ -9,6 +9,7 @@ chapters:
     - controller-container
     - argument-resolver
     - argument-value-resolvers
+    - service-value-resolver
     - view-event
     - finishing-request
     - exceptions
