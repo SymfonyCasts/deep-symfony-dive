@@ -1,67 +1,76 @@
-# View Event
+# Calling the Controller & View Event
 
-Coming soon...
+Ok, let's remember what we've done so far... because it's really not that much.
 
-So let's look, remember what we've done so far. It's really not that much. We
-dispatch an event,
+## The kernel.controller_arguments Event
 
-no,
+We dispatched an event, found the controller, dispatched another event, found the
+arguments, and... guess what? Now we're dispatching *another* event called
+`KernelEvents::CONTROLLER_ARGUMENTS`, which resolves to the name
+`kernel.controller_arguments`.
 
-found the controller, dispatch another event, found the arguments, and then
-dispatched another event, and now we're dispatching another event. 
-`ControllerArgumentsEvent`. There's no core important lessons on this. It's just another hook
-point.
+There are no core, important listeners to this: it's just another hook point. The
+only difference between this event and `kernel.controller` is that this event has
+access to the *arguments*. So, if you needed to do something that's *based* on
+what arguments were *about* to pass to the controller, then you'd listen to
+`kernel.controller_arguments`. This event *also* has the ability to change the
+controller *or* the arguments via setter methods on the event class.
 
-The difference between the `ControllerArgumentsEvent` and `ControllerEvent` is that
-controller arguments event is actually past the arguments. So if you needed to do
-something in the system that was based on what arguments were about to be passed to
-the controller, then you'd listen to `ControllerArgumentsEvent`. This event also has
-the possibility to change the controller or change the arguments on that event. And
-then drum roll. We call the controller. Yes. This is literally where the controller
-is called `$controller`  open parentheses, `...$arguments`. It's
-that simple. And of course, what does our Symfony controller always return a response
-unless it doesn't, and that's this next part. Check us out. Your controller doesn't
-actually have to return a response. If what? If you return something different, then
-you end up in this. If statement here or Symfony dispatches a view event, so
-basically Symfony says the controller returns something.
+## Calling the Controller
 
-It wasn't that response, so I'm going to dispatch an event and see if any listeners
-to the events can transform what the controller return into a response. This is kind
-of the view or the V and a true MVC framework. Normally in a Symfony controller, we
-return a response, but you could, for example, instead of returning the response, you
-can just return like an article and STI and then you can write a listener that
-transforms that article entity into HTML, for example, by rendering the template
-there and practice. This isn't used anywhere in Symfony's core.
+Then... drum roll... we finally call the controller! Yes, we *knew* the code that
+executed the controller lived *somewhere*... and here it is. It's delightfully
+simple: `$controller(...$arguments)`. I love that.
 
-but this is used internally, an API platform internally at API platform. Their core
-controllers just return the object behind the API resource. Then they have a list and
-they have a number of listeners on this event that transformed that object, like an
-entity into JSON or XML, whatever the user is requesting. There's also a another
-lesson on this comes from `SensioFrameworkExtraBundle`. No, I'm not going to talk
-about that. So as you can see down here, it checks if event has response, I'm
-actually gonna command and click on to `ViewEvent`. So if you have a listener on
-this, they can go get controller results who get what the controller return. And the
-important thing is actually it's in the parent class. So I'll hold open the request
-of that parent class. They can call the `setResponse()` method to set the new response
-onto that.
+## The kernel.view Event
 
-So if one of the listeners sent the response, then event, uh, then it calls
-`$event->hasResponse()`. And if so `$response = $event->getResponse()`. So that's what happens
-in API form. If none of the listeners, if no listener, set a response in the event.
-Then finally Symfony panics down here and it says that controller must return a
-response object, but it returned at something different. And of course, my favorite
-part of this whole system, if `null = $response`. Did you forget to add a return
-statement somewhere and your controller? So we've drawn this in our show action. I'm
-just going to return on the first line, spin over, refresh that page. And there it
-is. The controller must return a response object by it returned null. Did you forget
-to add a return statement somewhere in your controller?
+And of course, what does our Symfony controller *always* return? A `Response`.
+Unless... it doesn't. And that's this next part. It turns out, your controller
+really *doesn't* need to return a `Response` object. If you return something
+different, then you end up inside the next if statement. What does Symfony do?
+You can kinda start guessing whenever I ask that question. The answer is *almost*
+always: Symfony dispatches an event: `KernelEvents::VIEW`, which means `kernel.view`.
 
-Okay,
+When Symfony dispatches this event, it's basically saying:
 
-so I'll go back and remove that. So at this point, we definitely have a `Response`
-object. Either our controller return response object or a listener to `ViewEvent`
-returned a response object. So finally down here we're done. We return 
-`$this->filterResponse()`. What does this do? You can probably guess [inaudible] 
-dispatches and event, but let's look into that next and actually finish the whole 
-rest of the request response process.
+> Hey! So, this controller returned something that's *not* a response... and I
+> kinda need a response that I can send back to the user. Can any listeners to
+> this event, somehow, *transform* whatever the controller returned into a response?
+> That would be sweet!
 
+This is, kind of, the "view", or "V" in a true MVC framework. Normally our controller
+return a response directly. But instead, you *could*, for example, return...
+an `Article` entity! You would return a "model". Then, you could write a listener
+to this event that transforms that article entity into HTML by rendering the template.
+
+This event isn't used anywhere in Symfony's core, but it *is* used *extensively*
+inside API Platform. Internally, their controllers return *objects*. Then, they
+have a listener - actually a few that work together - that *transform* that object
+into JSON, XML or whatever the user is requesting.
+
+After dispatching the event, it checks to see if the event has a response. Hold
+Command or Ctrl and click to open the `ViewEvent` class. If you listen to this
+event, then you have access to what the controller *returned*. Then... I'm going
+to open the parent class... a listener can call `setResponse()` to set the response
+that was created.
+
+So if *one* of the listeners set the response, then `$event->hasResponse()` will
+be true and... we're saved! We *do* now have a response. But if *none* of the
+listeners are able to set a response, then *finally*, Symfony panics! It says
+that controller must return a `Response` object, but it returned something
+different. And then, one of my *favorite* parts of this whole system:
+if `null = $response`, it politely adds:
+
+> Did you forget to add a return statement somewhere and your controller?
+
+Ah yes, I *have* forgotten that, many times. Let's forget it now! Add a `return`
+in our `show()` action, then spin over, refresh and... enjoy the error!
+
+Ok, go back and remove that.
+
+At this point, we *definitely* have a `Response` object: either our controller
+returned a `Response` or a listener to `kernel.view` was able to create one. So
+*finally*, down here... we're done! We made it! We return
+`$this->filterResponse($response)`. What does *that* method do? Do you remember
+what you're *always* supposed to answer then I ask that question. Yep, it dispatches
+*another* event! Let's look into that next *and*... finish the rest of the process!
