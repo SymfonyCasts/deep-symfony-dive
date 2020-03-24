@@ -1,65 +1,91 @@
 # Finishing the Request
 
-Coming soon...
+There are a few other cool listeners. Here's one: `ContextListener`... and it's
+from security! Open that up: Shift+Shift, `ContextListener.php`.
 
-There are few other interesting ones on here. Another one here
-is called `ContextListener`. You can see it's actually part of the security
-components. Let's open that guy up. `ContextListener.php`. This listens to a
-couple of events. So let's scroll down here. Fund on current response so you can see
-rights, the security token into the session. So if you use, um, a session based
-firewall, this is the class that's actually responsible for taking your user,
-technically your token.
+## ContextListener: Loading the Security User from the Session
 
-and ultimately saving it into the session. Here it is,
-`$session->set($this->sessionKey, serialize($token))`. So this is actually
-what starts it. This is also the class responsible for unsee. Realizing it at the
-beginning of the request.
+Scroll down to find the method we care about: `onKernelResponse()`. It says:
 
-That is a couple of other ones. In here you can see there's a listener called
-`DisallowRobotsIndexingListener`. A that's actually a config that supports that
-configuration that you can do to return headers to uh, uh, disallow, um, robots
-indexing your site. And down here there's a `SessionListener`, which I'll open that
-one up.
+> Writes the security token into the session.
 
-`SessionListener` is responsible for actually storing the session information. So
-actually here at extends `AbstractSessionListener` to it. That's where the majority of
-the logic is. It actually listens on, `onKernerlRequest()`, but we're, we're interested
-in `onKernelResponse()`. And you can see down here it does several things here, but it
-actually calls it `$session->save()`. So all of these important background things are being
-handled by these listeners. All right, so the point is once we get a response, we
-this last event and then it calls `finishRequest()` and then eventually returns the
-response off of the event. So I'm going to go into `finishedRequest()`. All this does
-is dispatches one more event and then calls `$this->requestStack->pop()`.
-Remember this request that object is holding a collection of requests. Something
-we'll talk more about soon. This removes the last one off of it.
+If you use a "stateful" firewall... which you probably *are* using, unless your
+security system is a pure, API token-based system, then *this* is the class that's
+responsible for taking your authenticated `User` object - technically the "token"
+object that holds it - and saving it into the session. Here it is:
+`$session->set($this->sessionKey, serialize($token))`.
 
-So it basically removes the most recent one that was added earlier. So does the
-opposite. If I scroll up, does the opposite of `$this->requestStack->push($request)` So
-ultimately we get a response, we return a response. All of this goes back to the
-`handle()` method on top and every return `$this->handleRaw()` where the whole that response
-object we have is ultimately returned from `$kernel->handel()` and it's ultimately
-returned back. Giving back `index.php` `$response = $kernel->handle($request)`. The last
-two things that happen here, our `$response->send()`, I'll open that up, which is a fancy
-way of this is where it actually sends the headers. An echo echoes the content. And
-then finally `$kernel->terminate()`. If we look at the terminate method here, I'll
-look for it in my `HttpKernel` surprise it, dispatches it. One more event. This is a
-special event that's dispatched even after the content incentive, the user, nothing
-critical listens onto this, but this is actually where the, um, all the profiler
-data, all the data that was collected during the request to power this section,
-that's actually where it's ultimately stored. You can see profile listener on
-`kernel.terminate` it stores all of the data.
+This class is *also* responsible for *unserializing* the token at the start of
+each request.
 
-So that may have seemed like a lot, but really, if you look at it more specifically,
-here's what happens inside Symfony, we dispatch an event, we find the controller, we
-dispatch an event, we find the arguments, we dispatch an event, we call the
-controller, and then via `filterResponse()`, we dispatch another event, this furnace
-request dispatchers at another event. And ultimately that's it in an index dot PHP,
-we then send the headers and echo the content in dispatch one last event. So it's
-kind of like five different steps. Controller arguments, call the controller with
-events mixed in, in every single spots to make things happen. And most of those
-events aren't critical for how Symfony functions. They're just convenient hook
-points. And that's it. You just walked through the entire request response process.
-The only thing we haven't talked about back in `Httpkernel`, if you scroll all the way
-up, is remember the `handle()` method is ultimately what it's called and it wraps
-`handleRaw()` in a try catch. We haven't yet looked at what happens if an exception is their
-own somewhere in the system, and that controls quite a lot. Let's look at that next.
+## DisallowRobotsIndexingListener
+
+Close this class and look back at the event list. Let's see... there's a listener
+called `DisallowRobotsIndexingListener`, which adds an `X-Robots-Tag` header set
+to `noindex` *if* you set a `framework.disallow_search_engine_index` option to
+*true*. That options *defaults* to `true` in dev... which is why we see this. If
+you... *accidentally*... deploy your site in dev mode, it won't be indexed. *So*
+many neat things hiding in here.
+
+## SessionListener
+
+Let's look at *one* more: `SessionListener`. Open that one up: Shift+Shift then
+`SessionListener.php`.
+
+This class is responsible for actually *storing* the session information. It
+extends `AbstractSessionListener`... which holds the majority of the logic
+
+It actually listens on `kernel.request`... but we're interested in the
+`onKernelResponse()` method. It does several things... but eventually, it *calls*
+`$session->save()` to actually *put* your session data into storage.
+
+## kernel.finish_request & RequestStack
+
+Ok, enough playing with these listeners. Close the two session classes and go
+back to `HttpKernel`. After dispatching the `kernel.response` event, this calls
+a `finishRequest()` method and then *finally* returns the `Response` that's on the
+event. Let's see what `finishRequest()`. Ah! It dispatches one *more* event and
+then calls `$this->requestStack->pop()`.
+
+Remember: this `RequestStack` object is basically a collection of request objects -
+something we'll talk more about soon. The `pop()` method *removes* the
+most-recently-added `Request` object *from* that array. If you scroll back up to
+the top of `handleRaw()`, the `pop()` call does the *opposite* of
+`$this->requestStack->push($request)`. So... we don't know *why* this request
+stack things needs to exist... but we *at least* know that the current `Request`
+object is *added* to the `RequestStack` at the beginning of handling the request,
+and then *removed* at the end.
+
+## Returning the Response to the User
+
+So... we're done! The `filterResponse()` method returns the `Response`, then
+`handleRaw()` returns that `Response`... and then `handle()` *also* returns that
+`Response`... all the way back to `index.php`: `$response = $kernel->handle($request)`.
+
+We made it! Then we call `$response->send()` - I'll open that up - which is a *fancy*
+way of calling the PHP `header()` function to set all the headers and then
+echo'ing the content. At this point, our response is *sent*!
+
+## kernel.terminate: The Final Event
+
+Back in `index.php`, there's *one* final line: `$kernel->terminate()`. Let's
+find that inside of `HttpKernel`. And... wow. I'm *shocked*. This dispatches
+*one* final event.
+
+This event is dispatched *so* late that... if your web server is set up correctly,
+the response has *already* been sent to the user! This event isn't used too often..
+but it *is* where all the *data* for the profiler is stored. In fact, that's the
+*only* listener to this event in this app: `ProfilerListener`.
+
+So *that* is Symfony's request-response process in depth. It may have seemed like
+a lot, but if you zoom out, it's delightfully simple: we dispatch an event, find
+the controller, dispatch an event, find the arguments, dispatch an event, call
+the controller, and then both `filterResponse()` and `finishRequest()` dispatch
+two more events. Back in `index.php`, we send the headers, echo the content, and
+dispatch one *last* event. It's... kind of a simple "controller" system... with
+a *ton* of events mixed in as hook points.
+
+But go back to `Httpkernel` and scroll *all* the way back up to `handle()`. Ah
+yes, this wraps *all* of our code in a tr-catch block. So what happens if an
+exception *is* thrown from somewhere in our app? Well, quite a lot. Let's jump
+into that next.
