@@ -12,6 +12,8 @@ a Mac - and select "Implement Methods" to generate the one method this interface
 requires: `getSubscribedEvents()`. Inside, return an array of *all* the events
 we want to listen to, which will just be one.
 
+[[[ code('f4daecde1f') ]]]
+
 Now... you *might* be expecting me to say `'kernel.request' => 'onKernelRequest'`.
 This would mean that when the `kernel.request` event happens, I want Symfony to
 call an `onKernelRequest()` method on this class that we will create in a minute.
@@ -19,11 +21,15 @@ This *would* work, but starting in Symfony 4.3, instead of using this made-up
 `kernel.request` string, you can pass the event *class* name, which in this case
 is `RequestEvent::class`.
 
+[[[ code('2346d63882') ]]]
+
 More and more, you'll see documentation that tells you to listen to an event *class*
 like this, instead of a random string.
 
 Now, create the function: `public function onKernelRequest()`. Inside, dump and
 die `it's alive!!!`.
+
+[[[ code('38f59716bf') ]]]
 
 Cool! With any luck, Symfony will call our event listener *very* early on and
 it will kill the page. Close the profiler, refresh and... it's alive! Well
@@ -36,14 +42,20 @@ add `public function __construct()` with `LoggerInterface $logger`. I'll hit
 Alt+Enter and go to initialize fields as a lazy way to create the property and
 set it down here.
 
+[[[ code('3182e8a05b') ]]]
+
 In the method, add `$this->logger->info()` with:
 
 > I'm logging SUPER early on the request!
+
+[[[ code('a1d15fc06f') ]]]
 
 To compare this to logging in a controller, go back to `ArticleController`.
 On the `homepage` action, autowire a `$logger` argument and say `$logger->info()`:
 
 > Inside the controller!
+
+[[[ code('20865ace8b') ]]]
 
 We *expect* that the listener will be called first because the RequestEvent,
 also known as `kernel.request`, happens *before* the controller is executed.
@@ -62,6 +74,8 @@ This is where the new "event class names as event names" comes in handy. We're
 listening to `RequestEvent`, which means - surprise! - Symfony will pass us a
 `RequestEvent` object! Let's just `dd($event)`.
 
+[[[ code('262ce43ed6') ]]]
+
 Ok, move back over, close the profiler again, refresh and... there it is! Each
 event you listen to will be passed a *different* event object... and each event
 object will have different super-powers: giving you whatever information you might
@@ -79,6 +93,8 @@ this: `$this->logger->info()` and I'll use `sprintf()` to say
 > The User-Agent is %s
 
 Pass `$userAgent` for the placeholder.
+
+[[[ code('98f14c2b2b') ]]]
 
 Let's check it out! Move over, refresh, open the profiler in a new tab, go down to
 Logs and... we got it! We're logging the user agent *before* the controller
