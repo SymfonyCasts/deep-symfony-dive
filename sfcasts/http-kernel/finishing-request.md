@@ -1,54 +1,8 @@
-# Finishing Request
+# Finishing the Request
 
 Coming soon...
 
-No matter what Symfony's job is to take in the re, look at the incoming request and
-somehow convert that into response. That's the job of the `HttpKernel` class and
-specifically the `handleRaw()`. At this point we have a `Response` object. Either our
-controller returned the response object or a return something else and a listener to
-the view event was able to turn that into response object. So ultimately the bottom,
-we return `$this->filterResponse()` and pass in that response. And before we look at that
-method, I'm going to show one other thing way up at the top of this. Remember the
-very, very first event we threw, one of the things that listeners to that event can
-do is actually set the response and if they do, it also calls `$this->filterResponse()`.
-So no matter how we get the response, ultimately `filterResponse()` is going to be
-called a hold command or control and click into this to see what it does. What does
-`filterResponse()` to surprise? It dispatches another event called `ResponseEvent`. This
-is a number of interesting listeners on it. I'll actually go over and refresh our
-page. I'll click any link to go into the profiler and then go to events. So down
-here, here we go. `kernel.response`. That's the internal name of that response
-event. So for example, one of the things this does is this is how the web profiler
-work, how the web Depot two of our works look at web Debo, two of our listener on
-kernel response,
-
-any listeners to this event actually have the finished response. So very simply, that
-listener checks to see if this is an HTML page. And if it is an HTML page, I'll
-actually go up and click back to our page. If it is an HTML page search for script,
-then it injects a whole bunch of JavaScript on the bottom. All this JavaScript here
-is what's responsible for opening the web debug toolbar. So this is injected via a
-listener on the response event.
-
-Now as far as understanding the real mechanics of how Symfony handles the request and
-calls a controller, there's no critical listeners, uh, to response listener. But
-there are a couple of important ones. There are a couple of important ones like this
-first one, uh, `ResponseListener`. Let's actually open that up. So I'll shift shift
-`ResponsesListener.php` get the one from `http-kernel/`, not security. You can say
-response listener fixes the response headers based on the request. So the key thing
-down here is `onKernelResponse()`. This calls `$response->prepare($event->getRequest())`.
-I'll hold command or control to jump into that. So basically once the response has
-been created, this checks the response to see it has some missing pieces. For
-example, if the con, if the response doesn't have a `Content-Type` header yet it wasn't
-something that was set, it actually uses some information on the request to to guest
-the `Content-Type` for you.
-
-So `getPreferredFormat()`. I'll hold actually hold command to jump into that. This has
-different logic in it. I won't go into the full detail here to either get something
-called `getRequestFormat()` to return the `preferredFormat` or it can actually loop over
-the `Content-Type` headers to figure out which format to use. But basically it tries to
-figure out what format does the user want, HTML, JSON or something else. And based on
-that it sets the `Content-Type` header so it doesn't a couple of them number other
-normalizations down there to actually fix or prepare that a response. I'll close that
-class and response listener. A few other interesting ones on here. Another one here
+There are few other interesting ones on here. Another one here
 is called `ContextListener`. You can see it's actually part of the security
 components. Let's open that guy up. `ContextListener.php`. This listens to a
 couple of events. So let's scroll down here. Fund on current response so you can see
@@ -56,9 +10,9 @@ rights, the security token into the session. So if you use, um, a session based
 firewall, this is the class that's actually responsible for taking your user,
 technically your token.
 
-and ultimately saving it into the session. Here it is, 
-`$session->set($this->sessionKey, serialize($token))`. So this is actually 
-what starts it. This is also the class responsible for unsee. Realizing it at the 
+and ultimately saving it into the session. Here it is,
+`$session->set($this->sessionKey, serialize($token))`. So this is actually
+what starts it. This is also the class responsible for unsee. Realizing it at the
 beginning of the request.
 
 That is a couple of other ones. In here you can see there's a listener called
@@ -106,7 +60,6 @@ events mixed in, in every single spots to make things happen. And most of those
 events aren't critical for how Symfony functions. They're just convenient hook
 points. And that's it. You just walked through the entire request response process.
 The only thing we haven't talked about back in `Httpkernel`, if you scroll all the way
-up, is remember the `handle()` method is ultimately what it's called and it wraps 
+up, is remember the `handle()` method is ultimately what it's called and it wraps
 `handleRaw()` in a try catch. We haven't yet looked at what happens if an exception is their
 own somewhere in the system, and that controls quite a lot. Let's look at that next.
-

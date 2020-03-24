@@ -11,6 +11,7 @@ chapters:
     - argument-value-resolvers
     - service-value-resolver
     - view-event
+    - response-event
     - finishing-request
     - exceptions
     - error-renderer

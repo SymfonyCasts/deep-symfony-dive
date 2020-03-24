@@ -73,4 +73,5 @@ returned a `Response` or a listener to `kernel.view` was able to create one. So
 *finally*, down here... we're done! We made it! We return
 `$this->filterResponse($response)`. What does *that* method do? Do you remember
 what you're *always* supposed to answer then I ask that question. Yep, it dispatches
-*another* event! Let's look into that next *and*... finish the rest of the process!
+*another* event! Let's look into that next and dig into a few *really* cool listeners
+on it.
