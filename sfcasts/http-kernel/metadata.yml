@@ -15,7 +15,9 @@ chapters:
     - finishing-request
     - exceptions
     - kernel-exception
+    - flatten-exception
     - error-renderer
+    - html-error-renderer
     - controller-attribute
     - global-args
     - sub-request
