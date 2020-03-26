@@ -1,69 +1,99 @@
-# Controller Attribute
+# The Magic `_controller` Attribute
 
-Coming soon...
+Now that we've been stuffed full of knowledge about the request-response process,
+let's see what kind of trouble we can get into. Uh, I mean, let's do some cool
+and productive things with all this new info!
 
-Now that we've learned so much about the request and the response process, let's
-start seeing what kind of cool things we can do with this knowledge. So I'm going to
-close up everything except for `index.php` in `HttpKernel`. So my first kind of
-challenge is how could we, for example, from a listener, change the controller for a
-page. And actually there's a few different obvious ways to do this. We know that, uh,
-after the controllers determined Symfony dispatches that `ControllerEvent`, and this
-actually has a `setController()` method on it, so you can override it by adding listen
-to that event. You can do the same thing down here with `ControllerArgumentsEvent`.
-So that's really cool. Or you can do it in a different way. Let me close up my tree
-here. It's getting a little huge and let's go into our `UserAgentSubscriber`.
-Remember when Symfony determines the controller instead of controller resolver, it
-does that by looking at the `_controller` value of the request attributes.
+## Overriding the Controller from a Listener?
 
-So if for some reason we wanted to completely replace the controller from any
-listener, we can do it right here. `$request->attributes->set('_controller'...`. And let's
-set it to a anonymous function cause yeah, that's totally possible. Inside I'll say
-return new `Response()`. We'll say I just took over the controller and just like that on
-any page, this 404 page or actually the real page or the homepage, I clicked
-back of the home page. We just took over the controller for everything. We can even
-do the same argument stuff as before. So I could put eight `$slug` argument here. I'll
-actually say `$slug = null` and I'll `dd($slug)`. So on the article page, this is going
-to work because there's a slug wild card. So that an on page, it's no uh, but because
-I made it equal, no, I made it optional. It doesn't give me an error.
+Close all the files except for `index.php` and `HttpKernel`. Here's my first
+challenge for us: could we - from some event listener - change the *controller*
+for the page?
 
-So as far as the `RouterListener` concerned, it's actually opening back, open up,
-back up, `RouterListener.php`. If you look at, it's `onKernelRequest()`, it
-normally runs the routing and the routing figures out that _`controller` and it sets
-it on the request attributes. But if you look down here on `getSubscribedEvents()` 
-`onKernelRequest()` as a priority of 32 our subscriber has not specified a priority,
-which means this priority zero. So the router listener actually running first right
-now and it's executing routing and setting the `_controller` attributes and then we're
-actually overriding that value inside of our listener. But even if we changed the
-order, even if we made ours a higher priority, this would still work. And the reason
-is that at the top of router listener on current request, one of the first thing that
-it does is it checks to see has something else already set the `_controller`. If it has
-routing is already done and it does nothing. So the order here actually doesn't
-matter.
+Hint: in Symfony, the answer to "can I do X" is *always* yes. In this case, it's
+not only possible, there are *multiple* ways to do this.
 
-And this is how `ErrorListener` worked so far. I'm going to go back shift shift, go back
-to `ErrorListener.php`. If you remember here, it actually duplicated the request. So
-this is `onKernelException`. It duplicated the requests, which is a fancy way of
-basically saying it graded a new request object where it set the `_controller` to the
-`ErrorController`. And then it sent that entire thing back through `$kernel->handle()`,
-which means before any of the listeners are run on this spot here, the `_controller` was
-already set. So the router listener is actually called on this request too. But when
-that happens, the `_controller`, um, already has a value back to, we can see this here.
-If I
+For example, when `HttpKernel` dispatches the `kernel.controller` event, it passes
+each listener a `ControllerEvent` object. That class has a `setController()` method.
+Simple enough! We can override the controller by adding a listener to that event.
+Heck, you  can do the same thing down here with the `kernel.controller_arguments`
+event.
 
-dumped
+## Overriding the Controller on kernel.request?
 
-well, that's actually a `dump($request)`. Their attributes, `ErrorController` instead of
-here,
+So... that was too easy. I'll close up my directory tree... and then open our
+`UserAgentSubscriber`. Here's my harder challenge: how could we override the
+controller from *here*: from a listener to the `kernel.request` event. In this
+case, there is no `setController()` method.
 
-if I go over here and go to a four Oh four page, so I'll go back to `/news/foo`.
-You're going to see this is executed twice. Oh, I still have my `dd()` in there. Let's
-actually go and comment out. Our controller stays out of the way. They're gonna
-refresh again. And you can see down here in the Webby, but to bar it actually printed
-out twice. The first time is the first time they ride around through. And this second
-time is actually when the, uh, this second request from `ErrorListener` was being thrown
-inside of there. And the router lists are now returned that it has the controller
-we're actually seeing is sub requests. And action, which is something we're gonna
-talk about later, but you can actually see Stephanie handling two requests at once.
-We'll come back to that a little later. Right now I want to do more with messing
-around with the controller arguments or move this `dump()`.
+## Callback Controller with `_controller`
 
+The trick is to remember how the controller resolver works: it starts by fetching
+the `_controller` value from the `$request->attributes`. So if, for *some* reason,
+we wanted to completely replace the controller, we can do it right here:
+`$request->attributes->set('_controller', ...`. For fun, let's set this to an
+anonymous function... cause yea! That's allowed! Inside, return a
+`new Response()` with:
+
+> I just took over the controller
+
+Will it work? Refresh *any* page. Yep! We see our message here, on the homepage
+and *everywhere* else. And our normal controller tricks work just fine too: add
+a `$slug` argument... but give it a default value and then `dd($slug)`. On the
+article show page... this works thanks to the `{slug}` wildcard. On the homepage,
+its `null` because that wildcard doesn't exist, but I gave it a default value.
+
+## RouterListener Skips when `_controller` is Set
+
+Open up `RouterListener.php`  one more time and find its `onKernelRequest()` method.
+*This* method is *normally* responsible for executing the routing and setting
+the `_controller` key onto the request attributes. But back down at
+`getSubscribedEvents()`. Ah - the `kernel.request` listener has a priority of 32.
+We didn't give our subscriber a priority, which means that it has a priority of 0.
+This means that `RouterListener` is called *before* our subscriber.
+
+Here's what's happening: `RouterListener` is called first and it *is* executing
+the routing and setting an `_controller` key on the request attributes. *Then*
+*our* listener is called and we're *overriding* that value.
+
+So... if we *reversed* the order - made *our* listener be called first - our
+little `_controller` hack wouldn't work, right? Because `RouterListener` would
+override *our* value.
+
+Actually, no. At the top of `onKernelRequest()`, one of the *first* things it
+does is check to see if something else has *already* set the `_controller` attribute.
+If it has, it does nothing: something *else* is controlling the routing process.
+In reality, no matter *how* early the `_controller` attribute is set, it will
+*always* win over `RouterListener`.
+
+## Peaking at our First Sub-Request
+
+Why is that important? Because *this* explains how `ErrorListener` was able to
+execute the `ErrorController`. Open up `ErrorListener.php`. Remember: to execute
+`ErrorController` this *duplicated* the request. But it didn't create an exact
+copy: it overrode the attributes in order to set `_controller` to `error_controller`.
+Then it sent that new `Request` back through through the *entire* `$kernel->handle()`
+process! This means that before *any* listeners were executed during that second
+trip through `HttpKernel::handle()`, the `_controller` attribute was already set.
+
+So in reality, on an error page, `RouterListener` is called *two* times: once
+for the main request when it does its job normally, and *again* for the
+"sub request". That second time, because the `_controller` attribute is already
+set, it does nothing.
+
+In fact, let's see this. Before the if,
+`dump($request->attributes->has('_controller'))`. Then, in your browser, go back
+to a 404 and try it. Ah, boo! This hit the `die` statement in our fake controller,
+I didn't mean to do that. In `UserAgentSubscriber`, comment-out our controller hack
+so we can see the whole process.
+
+Ok, try it again. Hello 404 page! Hover over the target icon on the web debug
+toolbar. Yes! 2 dumps from `RouterListener`: `false` the first time it's called,
+the second time it's called - which is due to the code in `ErrorListener` - it
+dumps `true` because that `Request` *does* already have an `_controller` attribute.
+
+This second request is called a sub-request... but more on that topic later. Remove
+the `dump()` call.
+
+Let's see what other ways we can hack into Symfony, like by adding *new* things
+that can be used as controller arguments. That's next.
