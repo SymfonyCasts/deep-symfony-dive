@@ -1,62 +1,111 @@
 # How the HTML Error Page is Rendered
 
-Coming soon...
+When you use a browser, the format will be `html`. That's also the *default* format
+if the request format wasn't set and if the request doesn't contain an `Accept`
+header. In the case of `html`, the serializer will fail by throwing a
+`NotEncodableValueException`. When that happens, this offloads the work to
+*another* error render: `$this->fallbackErrorRenderer`.
 
-All right, so but in an HTML case, the serializer was going to throw this
-`NotEncodableValueException` and it's in a call `$this->fallbackErrorRenderer` you dig
-into the `fallbackErrorRenderer`. Because I have `twig` installed, it's going to be
-a class called `TwigErrorRender`. It's going to call it it's `render()` method and
-check this out. The first thing it does is called `$this->fallbackErrorRenderer`, and
-that is the core Error render, which is always there and it's called `HtmlErrorRenderer`.
-It's all open `HtmlErrorRenderer.php`.
+If you dumped this object, you'd find out that it is an instance of
+`TwigErrorRenderer`. Ok, let's open that up: Shift + Shift `TwigErrorRender.php`.
 
-All right, so let's actually look at what it does because `TwigErrorRender` calls
-`render()` on it. So if we look at the render method here, it once again creates a
-`FlattenException` and then calls `$this->renderException()` method down on this class in
-very simpler. What this `renderException()` method does is you can see this `$debugTemplate`
-here it set to `views/exception_full.html.php`. It actually renders
-a PHP template. If we're in debug mode, it's this `exception_full.html.php`
-If we are not in debug mode, then it uses an `error.html.php`, we can
-actually look at these, you'll see
+It... interesting! It immediately calls *another* `fallbackErrorRenderer`. This
+is an instance of `HtmlErrorRender`. Open that up: `HtmlErrorRenderer.php`.
 
-here, Nope,
+## Error Renderer Decoration
 
-the, this area include, uh, it's just going to go up and director to a resources and
-then look for that. So let's go up a directory here, `Resources/views/`, and there they
-are. So let's open `exception_full.html.php`. So this is actually what we
-are seeing over here. Whenever we have an exception, uh, to prove it down here in the
-middle, I'll put, I'm inside your exception page, go over here and refresh. There it
-is right there.
+Then... stop. Let me explain *why* and *how* we have *three* different error
+renderer classes. This `HtmlErrorRenderer` is the, sort of, "core" error renderer
+and it *always* exists. But then, *if* you have Twig installed, the
+`TwigErrorRenderer` suddenly "takes over" the error rendering process. It does
+that via service *decoration*: `TwigErrorRenderer` *decorates* `HtmlErrorRenderer`.
 
-So that is ultimately, this is the ultimate sample that does the exception. And you
-can see inside of here, this also `error.html.php`, which would be your normal
-error page when you're not in development mode. So I'm going to pose `exception_full.html.php`
-and let's also close `HtmlErrorRenderer.php`. So you can see here it gets this
-`$exception` object from the fallback render which now has the whatever our HTML is set
-onto it, the whole rest of this `TwigErrorRenderer` is a way to override the template. If
-you want to do, you can see here calls `$this->findTemplate` to see if the template
-actually exists. And if it did find an O an override template, it renders it and uses
-that instead instead. So if you look at the `fineTemplate()` down here, what at first
-looks more is um, something called `error%status_code%.html.twig` And it's
-looking at for an `@Twig`, which actually technically means it's looking forward in
-`TwigBundle`. Um, it's not actually into a bundle but that gives us, that doesn't
-actually exist in `TwigBundle`, but that gives us an override way cause there are ways
-to override a twig templates. So first looks for one of the status code. If it's
-there, it uses it. If there's not, it tries to look for a generic `error.html.twig`
-So this is how your overdue able to override, uh, era templates, um, via twig
-templates.
+And then... if you have the serializer component installed, suddenly there is
+*another* error renderer added to the system: `SerializerErrorRenderer`, and *it*
+decorates the `TwigErrorRenderer`. In other words, there is really only *one*,
+official "error renderer" service registered in the container. But through decoration,
+multiple error renderers are ultimately used.
 
-And that's it.
+## HtmlErrorRenderer: Default Exception & Error Templates
 
-So if you have a serialized bubble format like JSON or XML, it uses
-`SerializerErrorRenderer`
-ELLs and ultimately uses the `HtmlErrorRenderer` in the `TwigErrorRenderer` gives you an
-override. So that's normally how you're going to override temp, uh, errors is by, um,
-uh, creating the right template. But we now know that there are many hooks like
-overriding the `ErrorController` or listening to exception event, then ultimately
-handled through [inaudible]. That's basically it. Assuming we get a response back,
-there's a bit of other code down here, but basically the response is passed to
-`filterResponse()` and that response is sent back to the user exactly like normal. Which means
-even the kernel response method is ultimately called on the final response of an
-exception, which is why we get the web. But two of our down here, even on air pages.
-All right, next, let's talk about something else that I can't remember.
+Ok, let's look at the flow. `TwigErrorRender` calls `render()` on `HtmlErrorRenderer`.
+Remember: the `render()` method on *all* these classes has the same job: to return
+a `FlattenException` that contains the status code, headers and the "body" that will
+be used for the Response.
+
+So, it's no surprise that this *once* again starts by creating a `FlattenException`
+object. To get the "body of the response, it calls `$this->renderException()`.
+Jump to that.
+
+*This* is what builds the error or exception page. The `$debugTemplate` argument
+defaults to `views/exception_full.html.php`. Yea, this method render a PHP template!
+This template will be used in `debug`. If we're *not* in debug mode, then it
+"includes" - basically, renders - `error.html.php`. So `exception_full.html.php`
+in debug mode, `error.html.php` on production. The `include()` function is as
+simple as it gets.
+
+Let's go *see* the debug template. Using the directory tree on top... click the
+`error-handler/` directory, then navigate into
+`Resources/views/exception_full.html.php`
+
+This is *actually* what we're seeing in our browser right now. To prove it, in
+the middle, let's add:
+
+> I'm inside your exception page!
+
+Back on the browser, refresh this 404 page. There's our text! Go take out that
+text. To this template - and `error.html.php` - are responsible for rendering the
+debug and production HTML error pages out-of-the-box.
+
+Close `exception_full.html.php`... and also `HtmlErrorRenderer.php`.
+
+## TwigErrorRenderer: Twig Overrides
+
+Back in `TwigErrorRenderer`, this starts by getting the `FlattenException` from
+`HtmlErrorRenderer`. So then... if we *already* have the finished `FlattenException`,
+what's the point of *this* class?
+
+This *entire* class exists to give *you*, the application developer, the ability
+to *override* what the error template looks like. `$this->findTemplate()` is used
+to check if you have a Twig *override* template. If you don't, the `FlattenException`
+from `HtmlErrorRenderer` is used. But if you *do* have one, it renders that template
+and uses *its* HTML.
+
+## Twig Namespaces & Override Templates
+
+Scroll down to the `findTemplate()` method. Cool! It first looks for a template
+called `@Twig/Exception/error%s.html.twig`, where the `%s` part is the *status*
+code. the `@Twig` thing is a Twig *namespace*. Every bundle in your app automatically
+has one. Want to render a template from `FooBarBundle`? You could do that by saying
+`@FooBar` then the path to the template from within that bundle.
+
+This is *normally* used as a way for a bundle to render a template inside that
+bundle. But Symfony *also* registers an *override* path for every namespace.
+When you say `@Twig/Exception/error404.html.twig`, Twig *first* looks for the
+template as `templates/bundles/TwigBundle/Exception/error404.html.twig`.
+
+*Anyways*, if this template exists because you created it, it will be used.
+Otherwise, it looks for a generic `error.html.twig` that handles all status codes.
+*This* is how the Twig error template overrides work.
+
+And... phew! That's it! `SerializerErrorRenderer` renders XML & JSON pages, or,
+really, anything format that the serializer supports, `HtmlErrorRenderer` renders
+the HTML pages, and `TwigErrorRenderer` allows you to override that with
+carefully-placed Twig templates.
+
+## Finishing the Process
+
+Close both of the error renderers. We *now* know that there are *many* ways to
+hook into the exception-handling process. You can override `ErrorController`,
+listen to the `kernel.exception` event, customize the `ProblemNormalizer` for
+JSON or XML exceptions or add a Twig template override for custom HTML.
+
+No matter what, `ErrorListener` sets this `Response` onto the `ExceptionEvent`.
+In `HttpKernel`, if the event has a response, there's a bit of final status code
+normalization, but it passes the response to `filterResponse()`. So yes, even
+an error page will trigger that event, which is why a 404 page has the web debug
+toolbar.
+
+Ok team, we're now *truly* done walking through the HttpKernel process: both the
+happy and unhappy paths. Next, let's use our new knowledge to start hacking into
+the system.
