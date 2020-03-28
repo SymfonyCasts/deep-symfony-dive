@@ -81,6 +81,8 @@ which route matches.
 But... what is this `$parameters` variable? What does the `match()` method return?
 Let's find out! Hit enter and `dd($parameters)`.
 
+[[[ code('ee1a31ac9b') ]]]
+
 Let's go! Find your browser and click *back* to get the homepage. I'm also going to
 open an article page in another tab... and then refresh.
 
