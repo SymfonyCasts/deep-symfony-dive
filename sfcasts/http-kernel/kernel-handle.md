@@ -57,10 +57,14 @@ login page. Pass `/login` as the first arg.
 
 Now create a `$request2` variable and pretend that this is a request for `/register`.
 
+[[[ code('837ed049ec') ]]]
+
 Could we run our kernel and get 2 responses for these 2 requests? Uh... totally!
 `$response1 = $kernel->handle($request1)`... and then
 `$response2 = $kernel->handle($request2)`. Let's see what they look like:
 `dump($response1)`, `dump($response2)` and then `die`.
+
+[[[ code('b875b2d04f') ]]]
 
 Let's do this! Move over, refresh and... check it out! We just handled *two*
 different requests on the same page! The first *does* contain the HTML for the
