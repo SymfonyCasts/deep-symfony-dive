@@ -9,6 +9,8 @@ playing with a route in YAML. Open up `config/routes.yaml`. Uncomment the exampl
 route and change the path to `/playing`. Now, on your browser, open *another*
 tab and go to https://localhost:8000/playing.
 
+[[[ code('2371b6fbd8') ]]]
+
 That's exactly what we expected: `_route` set to the route name and `_controller`
 set to the controller string for that route.
 
@@ -18,6 +20,8 @@ But in reality, the `controller` key in a YAML route is just a shortcut. Before
 Symfony 4, there *was* no `controller` key. Nope, to define a controller you
 added a `defaults` key and put an `_controller` key below *that*.
 
+[[[ code('cf42138d21') ]]]
+
 Move over and refresh now. Woh! We get the *exact* same array! Yep, the
 `controller` key is *really* just a shortcut for setting an `_controller` *default*
 value on the route.
@@ -26,13 +30,19 @@ This is actually an important point, but to see why, let's go a bit further.
 First, add a `{id}` wildcard to the end of the path. Then, at your browser, add
 `/5` to the end of the URL. And... yep! The array now has an `id` key: no surprise.
 
+[[[ code('d7cb0937e9') ]]]
+
 *Normally*, the purpose of `defaults` on a route are to give a default value for
 a *wildcard*. If we say `id: 10`... and then refresh, the array still contains 5
 because *that's* what's in the URL. But *thanks* to the default, *now* we can *just*
 go to `/playing` and... the id uses the default value `10`.
 
+[[[ code('7afafe30af') ]]]
+
 Cool. But what if we just... *invent* a new key and put it here? Like
 `totally_inventing_this_default` set to `true`.
+
+[[[ code('fee0db031b') ]]]
 
 This won't change how the route *matches*, but it *will* change what we get back
 in the array. Refresh. The `totally_inventing_this_default` key is now inside
@@ -46,6 +56,8 @@ With route annotations, it looks a bit different, but it's exactly the same. We 
 add a `defaults` key and set `foo` to `bar`. Back in the browser, close the last
 tab and refresh the article show page. We suddenly have a `foo` key! On the
 route, remove that `defaults` stuff.
+
+[[[ code('1e03784723') ]]]
 
 ## Request Attributes
 
@@ -95,6 +107,8 @@ copy that... dump after, and `die`. Refresh the article show page. Yep! Before
 we dispatch the event, the attributes are empty. After? We have `_route`,
 `_controller`, `slug` and hey! A few *other* things were added by *other*
 listeners related to security. That's not important for us - but still, interesting!
+
+[[[ code('49b38fd4d4') ]]]
 
 Remove all that debug code.
 
