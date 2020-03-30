@@ -84,7 +84,7 @@ This argument is actually an iterator - it has an `iterable` type... which is *n
 important... except that we need to get fancy to see what's inside.
 `dd(iterator_to_array($this->argumentValueResolvers))`.
 
-Move over and... 7 items! Each object is being decorated by a
+Move over and... 8 items! Each object is being decorated by a
 `TraceableValueResolver`. But if you look inside - I'll expand a few of these -
 you'll see the *true* object: `RequestAttributeValueResolver`, `RequestValueResolver`,
 and a `SessionValueResolver`. *These* are the objects that figure out which

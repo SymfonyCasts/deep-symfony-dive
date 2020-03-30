@@ -20,6 +20,7 @@ chapters:
     - html-error-renderer
     - controller-attribute
     - global-args
+    - entity-arguments
     - sub-request
     - multiple-requests
     - sub-request-attributes
