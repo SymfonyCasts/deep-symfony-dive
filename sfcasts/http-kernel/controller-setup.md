@@ -90,6 +90,8 @@ format.
 Close both of the controller resolver classes and head back to `HttpKernel`. Let's
 see what this final *$controller* looks like. After the `if`, `dd($controller)`.
 
+[[[ code('c94fe2c04f') ]]]
+
 Ok, move over... and refresh. That's it! The weird PHP callable syntax: an array
 where the `0` index is an `ArticleController` *object*, and the `1` index is
 the string `homepage`.
@@ -102,6 +104,8 @@ a service like the logger? No problem! In `ArticleController`, add another
 argument to the constructor: `LoggerInterface $logger`. I'll hit Alt + Enter and
 go to "Initialize Fields" to create that property and set it. To prove it's
 working, let's say `$this->logger->info('Controller instantiated!')`.
+
+[[[ code('725164dfb0') ]]]
 
 Move over, refresh, click a link to open the profiler and go to the Logs section.
 *Cool*. The first log is from our listener to `kernel.request`, then our controller
