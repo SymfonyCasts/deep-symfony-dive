@@ -16,6 +16,8 @@ In `src/EventListener/UserAgentSubscriber.php`, we can say `$event->setResponse(
 Not *all* event classes have this `setResponse()` method - but `RequestEvent`
 does. Then say `new Response()` and set a very important message.
 
+[[[ code('1948f4d3b6') ]]]
+
 Now when we refresh... yay! Nedry killed *every* page!
 
 Remove that code... and then I'll close a few files.
@@ -97,6 +99,8 @@ Ultimately, what this method needs to return is some sort of *callable*. For us,
 it will be a method inside an object, but it can also be a number of other things,
 like an anonymous function. Let's see what our `$controller` looks like at this
 point. `dd($controller)`, then move back to your browser and refresh.
+
+[[[ code('d1773312b4') ]]]
 
 Ah yes: for us, `$controller` is the normal string format we've been seeing: the
 full controller class, `::`, then the method name.
