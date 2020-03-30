@@ -12,6 +12,8 @@ Remove that argument and replace it with `$slug`. Now add another arg:
 `$article = $articleRepository->findOneBy(['slug' => $slug])`.  And then, if
 *not* `$article`, `throw $this->createNotFoundException()`.
 
+[[[ code('b7570c7b7d') ]]]
+
 Functionally, this is identical to what we had before... but it will help us with
 our deep-dive. By the way, *we* know that this `createNotFoundException()` line will
 result in a 404 page. If you hold Command or Ctrl and click into that method, it
@@ -67,6 +69,8 @@ called `argumentValueResolvers`. Let's see what's going on here. Inside the
 first loop, `dd()` the `$metadata` variable: this should be *something* that,
 sort of, represents a single argument.
 
+[[[ code('77e4d666fe') ]]]
+
 Move over and refresh. Huh. Apparently this is an `ArgumentMetadata` object,
 which holds the name of the argument - `slug`... because that's the name of the
 first argument to the controller. It also holds the argument `type`, which
@@ -83,6 +87,8 @@ Clear out the `dd()`. Let's figure out what these `$argumentValueResolvers` are.
 This argument is actually an iterator - it has an `iterable` type... which is *not*
 important... except that we need to get fancy to see what's inside.
 `dd(iterator_to_array($this->argumentValueResolvers))`.
+
+[[[ code('9c4cfeb4cf') ]]]
 
 Move over and... 8 items! Each object is being decorated by a
 `TraceableValueResolver`. But if you look inside - I'll expand a few of these -
