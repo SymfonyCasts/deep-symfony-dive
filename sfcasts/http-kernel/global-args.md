@@ -57,7 +57,7 @@ php bin/console debug:container --tag=controller.argument_value_resolver
 ```
 
 And now... if you look at the service ids, one of them is for our
-`App\Service\IsMacArgumentResolver`. It's wrapped in *another* class because
+`App\Service\IsMacArgumentValueResolver`. It's wrapped in *another* class because
 Symfony is decorating the services with `TraceableValueResolver`, but this
 *is* our service being used. Our new service *already* has the tag thanks to
 Symfony's auto-configuration feature.
