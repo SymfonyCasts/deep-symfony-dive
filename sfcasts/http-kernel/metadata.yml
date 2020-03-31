@@ -23,4 +23,5 @@ chapters:
     - entity-arguments
     - sub-request
     - multiple-requests
+    - manual-sub-request
     - sub-request-attributes
