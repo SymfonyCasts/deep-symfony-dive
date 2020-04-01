@@ -28,6 +28,9 @@ Perfect. Remember, as it loops over the arguments, the first thing
 `ArgumentMetadata`.
 
 To see how this works, `dd()` `$request->attributes->all()` and also `$argument`.
+
+[[[ code('2d03c9a414') ]]]
+
 Because... check this out! This class *uses* the now-famous `$request->attributes`.
 
 Move over and refresh the article show page. *Beautiful*. The request attributes
