@@ -67,6 +67,8 @@ if `null === $response`, it politely adds:
 Ah yes, I *have* forgotten that, many times. Let's forget it now! Add a `return`
 in our `show()` action, then spin over, refresh and... enjoy the error!
 
+[[[ code('023db1312a') ]]]
+
 Go back and remove that.
 
 At this point, we *definitely* have a `Response` object: either our controller
