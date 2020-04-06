@@ -12,6 +12,8 @@ the *second* argument to our controller. Why? Because the first argument was han
 by `RequestAttributeValueResolver` before this was ever called. It's not
 usually important, but these value resolvers can be given a priority.
 
+[[[ code('6119b2753d') ]]]
+
 Anyways, the `$slack` argument is the first one that hits our
 `supports()` method. And the *key* thing is that this argument has a type of
 `App\Service\SlackClient`.
@@ -37,6 +39,8 @@ Actually, no: it's doing something *totally* different. To see what's going on,
 before the return, `dd($controller)` and also `$this->container` so we can
 see what it looks like.
 
+[[[ code('fe1277ff9f') ]]]
+
 Now... refresh! Ok, the controller is no surprise: it's the `ClassName::methodName`
 string syntax. But check out `$this->container`. This is *not* the main Symfony
 container. This is - *once again* - one of those *small* containers, called a
@@ -51,6 +55,8 @@ method in our system. The id is the full controller string, including the
 So... this is weird. What is this thing? To make sense of it, let's also `dd()`
 `$this->container->get($controller)`. That's eventually what the last line of
 `supports()` calls.
+
+[[[ code('1ab4f802fd') ]]]
 
 Refresh now. This last dump for `$this->container->get($controller)` gives us...
 *another* mini-container! And if we look at the `$serviceMap` property, it has
