@@ -97,6 +97,8 @@ found in the database. Pass `null` as the first argument to
 The second argument is a way to set the *previous* exception. Let's fake what
 the router does: `new NoConfigurationException()`.
 
+[[[ code('2f21eeed9f') ]]]
+
 Testing time! Move over, click back to the real article show page... then change
 the slug to `foo`. Boom! Welcome to Symfony! I know, this is a silly example... but
 can you feel the power?
