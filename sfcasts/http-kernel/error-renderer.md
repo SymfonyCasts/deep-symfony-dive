@@ -15,7 +15,7 @@ callback that points down here to this `getPreferredFormat()` method. This is a
 fancy way of getting the request and calling `$request->getPreferredFormat()`.
 And... hey! We know that method! I'll hit Shift + Shift and open `Response.php`
 from `HttpFoundation`. Search for `prepare()`. This method is called by a listener
-to the `kernel.response` method. It normalizes a few things... *including* setting
+to the `kernel.response` event. It normalizes a few things... *including* setting
 the `Content-Type` header if it hasn't *already* been set. To help with that, it
 calls `$request->getPreferredFormat()` to try to figure out if the user wants
 HTML, JSON or something else. One of the ways it figures this out is by looking
