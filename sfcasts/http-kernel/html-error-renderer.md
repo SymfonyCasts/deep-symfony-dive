@@ -56,6 +56,8 @@ let's add:
 
 > I'm inside your exception page!
 
+[[[ code('d6e0c02c41') ]]]
+
 Back on the browser, refresh the 404 page. There's our text! Go... take that out.
 
 So this template and `error.html.php` are responsible for rendering the debug
