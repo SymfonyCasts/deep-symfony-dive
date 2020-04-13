@@ -44,6 +44,8 @@ Go find this method. Hmm. The first thing it does is reference some
 `dd($this->controller)`, then spin over to your browser, make sure you're on a
 404 page and refresh.
 
+[[[ code('e38ee43c47') ]]]
+
 Interesting: it's a *string*: `error_controller`. Find your terminal and run:
 
 ```terminal
