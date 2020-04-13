@@ -19,7 +19,11 @@ the `Response`.
 ## The SerializerErrorRenderer
 
 Let's... find out what this `errorRenderer` thing is:
-`dd($this->errorRenderer)`. Move over and refresh. Ok cool: it's something called
+`dd($this->errorRenderer)`. 
+
+[[[ code('b941b7673c') ]]]
+
+Move over and refresh. Ok cool: it's something called
 `SerializerErrorRenderer`. And actually, it only uses this class because this
 project has the *serializer* component installed. If you did *not*, this would
 be a different class - one that we'll see in a few minutes. And, by the way,
