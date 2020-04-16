@@ -37,11 +37,15 @@ anonymous function... cause yea! That's allowed! Inside, return a
 
 > I just took over the controller
 
+[[[ code('98b2a13ecd') ]]]
+
 Will it work? Refresh *any* page. Yep! We see our message here, on the homepage
 and *everywhere*. And our normal controller tricks work just fine: add a
 `$slug` argument... but give it a default value and then `dd($slug)`. On the
 article show page... this works thanks to the `{slug}` wildcard. On the homepage,
 it's `null` because that wildcard doesn't exist.
+
+[[[ code('92d4a73950') ]]]
 
 ## RouterListener Skips when `_controller` is Set
 
@@ -83,9 +87,15 @@ set, `RouterListener` does nothing.
 
 In fact, let's see this. Before the if,
 `dump($request->attributes->has('_controller'))`. Then, in your browser, go back
-to a 404 and try it. Ah, boo! This hit the `die` statement in our fake controller.
+to a 404 and try it. 
+
+[[[ code('548eb5de23') ]]]
+
+Ah, boo! This hit the `die` statement in our fake controller.
 I didn't mean to do that. In `UserAgentSubscriber`, comment-out our controller hack
 so we can see the whole process.
+
+[[[ code('414a540797') ]]]
 
 Ok, try it again. Hello 404 page! Hover over the target icon on the web debug
 toolbar. Yes! 2 dumps from `RouterListener`: `false` the first time it's called
