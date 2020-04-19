@@ -21,7 +21,7 @@ Just for the heck of it, let's add that same logic to the sidebar above this.
 This lives in the homepage template, so find `ArticleController::homepage`...
 add an `$isMac` argument and pass *this* into the template. Steal the `isMac`
 logic from the trending quotes template, open `homepage.html.twig` and... right
-after the "Buy Now!" button, paste.
+below the "Buy Now!" button, paste.
 
 When we try the page now, no surprise: *both* places show the message.
 
