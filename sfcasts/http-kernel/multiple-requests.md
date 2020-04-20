@@ -8,9 +8,14 @@ thanks to a complete cycle through `HttpKernel::handle()`. All the same listener
 and all the same argument value resolvers are called.
 
 So... cool! Let's use that! Add an `$isMac` argument... then pass it into the
-template. Inside `trendingQuotes.html.twig`, near the bottom, add
-`{% if isMac %}{% endif %}` and inside, put an `<hr>`, a `<small>` tag, and then
-say:
+template. 
+
+[[[ code('59eaf6e7d1') ]]]
+
+Inside `trendingQuotes.html.twig`, near the bottom, add `{% if isMac %}{% endif %}` 
+and inside, put an `<hr>`, a `<small>` tag, and then say:
+
+[[[ code('3ac61c2a96') ]]]
 
 > BTW, you're using a Mac!
 
@@ -19,9 +24,14 @@ On the right, there it is! We're using a Mac.
 
 Just for the heck of it, let's add that same logic to the sidebar above this.
 This lives in the homepage template, so find `ArticleController::homepage`...
-add an `$isMac` argument and pass *this* into the template. Steal the `isMac`
-logic from the trending quotes template, open `homepage.html.twig` and... right
-below the "Buy Now!" button, paste.
+add an `$isMac` argument and pass *this* into the template. 
+
+[[[ code('f27f3e2d87') ]]]
+
+Steal the `isMac` logic from the trending quotes template, open `homepage.html.twig` 
+and... right below the "Buy Now!" button, paste.
+
+[[[ code('44c71c9771') ]]]
 
 When we try the page now, no surprise: *both* places show the message.
 
@@ -40,6 +50,8 @@ grabs the `mac` query parameter but runs it through PHP's `filter_var()` functio
 with the `FILTER_VALIDATE_BOOLEAN` flag. That means a value like a `false` string
 will turn into a `false` boolean. Kinda fun. Anyways, after this, return so the
 function doesn't continue.
+
+[[[ code('4a713c9458') ]]]
 
 Ok: if I refresh without changing the URL, it still reads my `User-Agent` and
 everything looks right. Now add `?mac=false`. And... it works! The message is
@@ -64,6 +76,9 @@ representation of the "real" request. And so, it may not have all the same data.
 It doesn't have the query parameters, for example.
 
 Let's see this: `dump($request)` inside of the `resolve()` method... then refresh.
+
+[[[ code('bc59635b6d') ]]]
+
 Hover over the target icon on the web debug toolbar. Yep, *two* dumps. If we
 look at the query parameters for the first `Request`... it's got it! `mac=false`.
 But down on the second request, it has some `_path` query parameter, but *no* `mac`.
