@@ -311,6 +311,16 @@
             "description": null
         },
         {
+            "id": "subrequest-dump-request",
+            "name": "subrequest-dump-request",
+            "description": null
+        },
+        {
+            "id": "subrequest-remove-dump-request",
+            "name": "subrequest-remove-dump-request",
+            "description": null
+        },
+        {
             "id": "subrequest-handle-manual-sub-request",
             "name": "SubRequest: handle manual sub-request",
             "description": null
@@ -351,5 +361,5 @@
             "description": null
         }
     ],
-    "sha": "6853df9572387a7b1975673db45ce114cc1a8d4f"
+    "sha": "c188ab6d83f0cbc47f538cefe1d5f32aef78da14"
 }

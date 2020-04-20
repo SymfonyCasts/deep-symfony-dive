@@ -1,0 +1,12 @@
+diff --git a/src/Service/IsMacArgumentValueResolver.php b/src/Service/IsMacArgumentValueResolver.php
+index e17ffbb..27489bb 100644
+--- a/src/Service/IsMacArgumentValueResolver.php
++++ b/src/Service/IsMacArgumentValueResolver.php
+@@ -15,7 +15,6 @@ class IsMacArgumentValueResolver implements ArgumentValueResolverInterface
+ 
+     public function resolve(Request $request, ArgumentMetadata $argument)
+     {
+-        dump($request);
+         if ($request->query->has('mac')) {
+             yield $request->query->getBoolean('mac');
+ 
