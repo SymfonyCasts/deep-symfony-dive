@@ -33,22 +33,34 @@ inside Twig. The content of that Response will be printed right here.
 Let's execute a new controller: `App\\Controller` - you need 2 slashes because
 we're inside a string - `\\PartialController`. For the method, how about, `::trendingQuotes`.
 
+[[[ code('e7df6fa2fa') ]]]
+
 ## Creating the Sub-Request Controller
 
 Cool! Let's go make that! Click on `Controller/` and create a new PHP class:
 `PartialController`. Make it extend the usual `AbstractController` and create
 the `public function trendingQuotes()`.
 
+[[[ code('154d52c2d4') ]]]
+
 But instead of making a real database query, let's fake it. I'll paste in a new
 private function called `getTrendingQuotes()`: it returns an array with the
-data for the 3 quotes. Above, call this: `$quotes = $this->getTrendingQuotes()`...
+data for the 3 quotes. 
+
+[[[ code('0a4cb1861f') ]]]
+
+Above, call this: `$quotes = $this->getTrendingQuotes()`...
 and then render the template: `return $this->render()`,
 `partial/trendingQuotes.html.twig` passing in the `$quotes` variable.
+
+[[[ code('05d8a8e9ee') ]]]
 
 *Finally* add the template: create the new `partial/` directory first... then the
 new `trendingQuotes.html.twig` inside. Perfect! I'll paste some code here
 that loops over the quotes and prints them. Remember that you can get *any* of
 the code I'm pasting from the code blocks on this page.
+
+[[[ code('1ceeb89e70') ]]]
 
 Ok! Let's see if it works! Move over and refresh. Woo! That was amazing! We just
 made a sub-request!
