@@ -8,6 +8,8 @@ In fact, we need this info *so* often, that we want the ability to add an
 
 Let's `dump($isMac)`... and then try it. No surprise, it explodes!
 
+[[[ code('30f3e547f3') ]]]
+
 > Controller `show()` requires that you provide a value for the `$isMac` argument.
 
 I'll go back to a real article page, though that won't make any difference.
@@ -30,6 +32,8 @@ Inside of our listener, let's say `$isMac = stripos($userAgent, 'Mac') !== false
 Now, to make `isMac` available as an argument to any controller, add
 `$request->attributes->set('isMac', $isMac)`.
 
+[[[ code('3a4f92ff45') ]]]
+
 And... that's it! Try the page now. It works! And for me, it's set to true.
 
 ## Custom ArgumentValueResolver
@@ -45,6 +49,8 @@ create a new class called: `IsMacArgumentValueResolver`. The only rule is that
 this class must implement `ArgumentValueResolveInterface`. I'll go to the
 Code -> Generate menu - or Command + N on a Mac - and select "Implement Methods"
 to generate the two methods that we need.
+
+[[[ code('462c94204b') ]]]
 
 Without doing anything else, this class is *already* being used by Symfony as
 an argument value resolver. When we talked about that system, I hinted that the
@@ -68,11 +74,17 @@ Let's go fill in the logic. Here's the plan: very simply, if the argument's name
 *exactly* matches `$isMac`, we'll fill in our value. So for `supports()`,
 return `$argument->getName() === 'isMac'`.
 
+[[[ code('9670a46b21') ]]]
+
 For `resolve()`, go grab the `$userAgent` code from the subscriber, paste it,
 and then also copy the  `stripos()` logic. Delete the last two lines from the
 subscriber so that it stops setting this global argument.
 
+[[[ code('e17791d7a3') ]]]
+
 Finish up the resolver by saying `return stripos($userAgent, 'Mac') !== false`.
+
+[[[ code('5af8281047') ]]]
 
 Let's try it! Find your browser, refresh and.. boo!
 
