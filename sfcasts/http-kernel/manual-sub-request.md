@@ -7,7 +7,11 @@ behind-the-scenes.
 Insides our homepage controller, let's execute a sub request right here. How?
 It's simpler than you might think. Step 1: create a new request object:
 `$request = new Request()`. This is a totally empty `Request` object: it
-basically has nothing in it. It's not like the `Request::createFromGlobals()`
+basically has nothing in it. 
+
+[[[ code('65d47e64e8') ]]]
+
+It's not like the `Request::createFromGlobals()`
 method that we saw earlier. *That* method pre-populates the object with all the
 current request information. This does *not* do that. To render the partial
 controller, set the request attribute: `$request->attributes->set('_controller')`
@@ -15,10 +19,14 @@ and set that to the same string we have inside our Twig template. I'll copy
 that... and paste it here:
 `'App\\Controller\\PartialController::trendingQuotes'`.
 
+[[[ code('0ef8eab973') ]]]
+
 We now have a `Request` object with nothing in it except for an `_controller`
 attribute. And... that's all we need! Well, to work around some internal validation
 that checks for a valid IP address, we *also* need to say
 `$request->server->set('REMOTE_ADDR', '127.0.0.1')`.
+
+[[[ code('50e1fac205') ]]]
 
 To send this into `HttpKernel`, we can fetch that *service*. Yes, even the mighty
 `HttpKernel` is a service in the container. Add another argument:
@@ -31,12 +39,18 @@ that's the default - or if this is a sub-request - some request that is happenin
 *inside* the main one. That's our situation, so pass:
 `HttpKernelInterface::SUB_REQUEST`.
 
+[[[ code('1ec52334f1') ]]]
+
 What difference will that make? Not much. But listeners to almost *every*
 event that we've seen are *passed* this flag on the event object and can behave
 *differently* based on whether or not a master or sub request is being handled.
 We'll see that in a few minutes.
 
-To check if this works, `dump($response)`. Um... ok! Let's try this! We added
+To check if this works, `dump($response)`. 
+
+[[[ code('2fa9e1568e') ]]]
+
+Um... ok! Let's try this! We added
 this to the homepage... so refresh. Everything looks normal on this *main* request.
 Now hover over the target icon on the web debug toolbar. There it is! A dumped
 `Response` with the trending quotes content inside.
@@ -49,8 +63,12 @@ the template.
 Set the threshold back down to 0 milliseconds. *Way* down on the main profiler,
 the sub-request shows up as this strange `__section__.child` thing.
 
-Go back to the homepage controller and comment out the sub request logic. I wanted
-you to see that this is *all* that *really* happens to trigger a sub request.
+Go back to the homepage controller and comment out the sub request logic. 
+
+[[[ code('359b8bf9b2') ]]]
+
+I wanted you to see that this is *all* that *really* happens to trigger 
+a sub request.
 
 ## Listeners and the isMasterRequest() Flag
 
@@ -70,6 +88,8 @@ objects.
 
 So, what can we do? At the very top of our listener, if *not*
 `$event->isMasterRequest()`, simply return.
+
+[[[ code('f9f97112e7') ]]]
 
 The `isMasterRequest()` method is a shortcut to check the flag that was originally
 passed to `HttpKernel::handle()`. Our listener *will* still be called on a sub-request,
