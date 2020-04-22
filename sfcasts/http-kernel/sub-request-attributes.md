@@ -39,6 +39,8 @@ take in the `Request` object from `HttpFoundation` and return a boolean. For the
 logic, copy everything from inside of `resolve()`, remove it and paste it here.
 Change both of the `yield` calls to `return`.
 
+[[[ code('3c7bb9036a') ]]]
+
 Perfect! We now have a function to tell us if we're using a Mac. Now, up in
 `onKernelRequest()`, if this is a sub-request, the method returns immediately.
 But if it's a *master* request, let's work some magic. How can we pass the `isMac`
@@ -50,6 +52,8 @@ a perfect example!
 Do it with `$request->attributes->set()` and create a key called `_isMac` set to
 `$this->isMac($request)`.
 
+[[[ code('02bc27d22e') ]]]
+
 We're calling it `_isMac` because if we called it just `isMac`, we wouldn't even
 *need* the argument value resolver! It would immediately be possible to have an
 `$isMac` argument without an error. So... I want to try to do this, kind of, the
@@ -58,8 +62,13 @@ hard way.
 Move over to the `IsMacArgumentValueResolver`. Here, we're going to *read* that
 attribute, which will *only* exist on the *master* request. Inside of `supports()`,
 add `&& $request->attributes->has('_isMac')`. Supports will *now* return false
-for a sub request. In `resolve`,
-`yield $request->attributes->get('_isMac')`
+for a sub request. 
+
+[[[ code('d0855bbca7') ]]]
+
+In `resolve`, `yield $request->attributes->get('_isMac')`
+
+[[[ code('91cf3c2028') ]]]
 
 That's it! Does it work? In your browser, *first* open an article show page in a new
 tab. Here, it works: you can see it on the web debug toolbar: we're dumping the
@@ -84,6 +93,8 @@ to want to know!
 The solution is to *pass* the `isMac` value from your *main* request *to* your
 sub request object. In a Twig template, you can do this by passing an optional
 second array argument. Pass `isMac` set to `isMac`.
+
+[[[ code('2d56310ee5') ]]]
 
 Before we chat about this, let's see if it works. Refresh and... it *does*! Woh!
 Let... me explain. The second argument to `controller()` is an array of values that
