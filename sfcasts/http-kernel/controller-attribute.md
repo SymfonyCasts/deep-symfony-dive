@@ -76,7 +76,7 @@ Why is that important? Because *this* explains how `ErrorListener` was able to
 execute `ErrorController`. Open up `ErrorListener.php`. Remember: to execute
 `ErrorController` this *duplicated* the request. But it didn't create an exact
 copy: it overrode the attributes in order to set `_controller` to `error_controller`.
-Then it sent that new `Request` back through through the *entire* `$kernel->handle()`
+Then it sent that new `Request` back through the *entire* `$kernel->handle()`
 process! This means that before *any* listeners were executed during that *second*
 trip through `HttpKernel::handle()`, the `_controller` attribute was already set.
 
