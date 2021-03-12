@@ -11,7 +11,7 @@ class SlackClient
 
     private $slack;
 
-    public function __construct(Client $slack)
+    public function __construct(Client $slack = null)
     {
         $this->slack = $slack;
     }
@@ -26,6 +26,8 @@ class SlackClient
             ->from($from)
             ->withIcon(':ghost:')
             ->setText($message);
-        $this->slack->sendMessage($message);
+        // the actual functionality was removed so we could make
+        // this code support PHP 8
+        //$this->slack->sendMessage($message);
     }
 }
