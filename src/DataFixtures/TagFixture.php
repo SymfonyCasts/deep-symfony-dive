@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Tag;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class TagFixture extends BaseFixture
 {

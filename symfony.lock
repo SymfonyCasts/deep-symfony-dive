@@ -101,8 +101,8 @@
     "doctrine/persistence": {
         "version": "v1.1.0"
     },
-    "doctrine/reflection": {
-        "version": "v1.0.0"
+    "doctrine/sql-formatter": {
+        "version": "1.1.1"
     },
     "easycorp/easy-log-handler": {
         "version": "1.0",
@@ -118,6 +118,9 @@
     },
     "egulias/email-validator": {
         "version": "2.1.11"
+    },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
     },
     "fzaninotto/faker": {
         "version": "v1.8.0"
@@ -139,9 +142,6 @@
     },
     "imagine/imagine": {
         "version": "v0.7.1"
-    },
-    "jdorn/sql-formatter": {
-        "version": "v1.2.17"
     },
     "knplabs/knp-components": {
         "version": "v1.3.10"
@@ -169,6 +169,15 @@
     },
     "knplabs/knp-time-bundle": {
         "version": "1.9.0"
+    },
+    "laminas/laminas-code": {
+        "version": "4.0.0"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.3.1"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.2.0"
     },
     "league/flysystem": {
         "version": "1.0.50"
@@ -218,9 +227,6 @@
     },
     "ocramius/package-versions": {
         "version": "1.3.0"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.2.2"
     },
     "oneup/flysystem-bundle": {
         "version": "3.0",
@@ -420,6 +426,9 @@
             "src/Kernel.php"
         ]
     },
+    "symfony/http-client-contracts": {
+        "version": "v2.3.1"
+    },
     "symfony/http-foundation": {
         "version": "v4.1.11"
     },
@@ -507,11 +516,17 @@
     "symfony/polyfill-ctype": {
         "version": "v1.10.0"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.22.1"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.10.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.22.1"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
@@ -595,6 +610,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.1.11"
+    },
+    "symfony/string": {
+        "version": "v5.1.11"
     },
     "symfony/templating": {
         "version": "v4.1.11"
@@ -711,11 +729,5 @@
     },
     "webmozart/assert": {
         "version": "1.4.0"
-    },
-    "zendframework/zend-code": {
-        "version": "3.3.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }
