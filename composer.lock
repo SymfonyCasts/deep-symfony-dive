@@ -3462,26 +3462,30 @@
         },
         {
             "name": "oneup/flysystem-bundle",
-            "version": "3.4.0",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/1up-lab/OneupFlysystemBundle.git",
-                "reference": "bf8b1bdc4fca6e0ad072ff917b9c9e792d682588"
+                "reference": "de1aa0fa361496b3837da5cac286f029595581da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/1up-lab/OneupFlysystemBundle/zipball/bf8b1bdc4fca6e0ad072ff917b9c9e792d682588",
-                "reference": "bf8b1bdc4fca6e0ad072ff917b9c9e792d682588",
+                "url": "https://api.github.com/repos/1up-lab/OneupFlysystemBundle/zipball/de1aa0fa361496b3837da5cac286f029595581da",
+                "reference": "de1aa0fa361496b3837da5cac286f029595581da",
                 "shasum": ""
             },
             "require": {
                 "league/flysystem": "^1.0.26",
-                "php": "^7.0",
-                "symfony/config": "^3.4|^4.0|^5.0",
-                "symfony/dependency-injection": "^3.4|^4.0|^5.0",
-                "symfony/http-kernel": "^3.4|^4.0|^5.0"
+                "php": ">=7.1",
+                "symfony/config": "^3.4 || ^4.0 || ^5.0",
+                "symfony/dependency-injection": "^3.4 || ^4.0 || ^5.0",
+                "symfony/http-kernel": "^3.4 || ^4.0 || ^5.0"
+            },
+            "conflict": {
+                "async-aws/flysystem-s3": "<1.0"
             },
             "require-dev": {
+                "async-aws/flysystem-s3": "^1.0",
                 "jenko/flysystem-gaufrette": "^1.0",
                 "league/flysystem-aws-s3-v2": "^1.0",
                 "league/flysystem-azure-blob-storage": "^0.1",
@@ -3494,16 +3498,15 @@
                 "league/flysystem-webdav": "^1.0",
                 "league/flysystem-ziparchive": "^1.0",
                 "litipk/flysystem-fallback-adapter": "^0.1",
-                "phpunit/phpunit": "^6.4",
+                "phpunit/phpunit": "^6.5 || ^7.5 || ^8.5",
                 "spatie/flysystem-dropbox": "^1.0",
                 "superbalist/flysystem-google-storage": "^4.0",
-                "symfony/asset": "^3.4|^4.0|^5.0",
-                "symfony/browser-kit": "^3.4|^4.0|^5.0",
-                "symfony/finder": "^3.4|^4.0|^5.0",
-                "symfony/framework-bundle": "^3.4|^4.0|^5.0",
-                "symfony/templating": "^3.4|^4.0|^5.0",
-                "symfony/translation": "^3.4|^4.0|^5.0",
-                "symfony/yaml": "^3.4|^4.0|^5.0",
+                "symfony/asset": "^3.4 || ^4.0 || ^5.0",
+                "symfony/browser-kit": "^3.4 || ^4.0 || ^5.0",
+                "symfony/finder": "^3.4 || ^4.0 || ^5.0",
+                "symfony/templating": "^3.4 || ^4.0 || ^5.0",
+                "symfony/translation": "^3.4 || ^4.0 || ^5.0",
+                "symfony/yaml": "^3.4 || ^4.0 || ^5.0",
                 "twistor/flysystem-stream-wrapper": "^1.0"
             },
             "suggest": {
@@ -3562,9 +3565,9 @@
             ],
             "support": {
                 "issues": "https://github.com/1up-lab/OneupFlysystemBundle/issues",
-                "source": "https://github.com/1up-lab/OneupFlysystemBundle/tree/3.4.0"
+                "source": "https://github.com/1up-lab/OneupFlysystemBundle/tree/3.7.0"
             },
-            "time": "2020-01-09T08:40:41+00:00"
+            "time": "2020-12-22T08:19:35+00:00"
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -4064,20 +4067,20 @@
         },
         {
             "name": "psr/http-client",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-client.git",
-                "reference": "496a823ef742b632934724bf769560c2a5c7c44e"
+                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/496a823ef742b632934724bf769560c2a5c7c44e",
-                "reference": "496a823ef742b632934724bf769560c2a5c7c44e",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
+                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
+                "php": "^7.0 || ^8.0",
                 "psr/http-message": "^1.0"
             },
             "type": "library",
@@ -4110,10 +4113,9 @@
                 "psr-18"
             ],
             "support": {
-                "issues": "https://github.com/php-fig/http-client/issues",
                 "source": "https://github.com/php-fig/http-client/tree/master"
             },
-            "time": "2018-10-30T23:29:13+00:00"
+            "time": "2020-06-29T06:28:15+00:00"
         },
         {
             "name": "psr/http-factory",
