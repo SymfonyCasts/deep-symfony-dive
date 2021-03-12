@@ -1,8 +1,8 @@
 diff --git a/vendor/symfony/http-kernel/HttpKernel.php b/vendor/symfony/http-kernel/HttpKernel.php
-index 04b3183..a0b4bdc 100644
+index 8503313..c840c3f 100644
 --- a/vendor/symfony/http-kernel/HttpKernel.php
 +++ b/vendor/symfony/http-kernel/HttpKernel.php
-@@ -128,6 +128,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
+@@ -140,6 +140,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
          if (false === $controller = $this->resolver->getController($request)) {
              throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
          }

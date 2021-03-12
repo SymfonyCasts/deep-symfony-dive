@@ -1,8 +1,8 @@
 diff --git a/vendor/symfony/error-handler/Resources/views/exception_full.html.php b/vendor/symfony/error-handler/Resources/views/exception_full.html.php
-index 4d46d59..aeb6ea3 100644
+index 5e8b043..5c939bb 100644
 --- a/vendor/symfony/error-handler/Resources/views/exception_full.html.php
 +++ b/vendor/symfony/error-handler/Resources/views/exception_full.html.php
-@@ -33,6 +33,7 @@
+@@ -39,6 +39,7 @@
              </header>
          <?php } ?>
  

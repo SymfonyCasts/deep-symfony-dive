@@ -1,5 +1,5 @@
 diff --git a/vendor/symfony/http-kernel/Controller/ArgumentResolver.php b/vendor/symfony/http-kernel/Controller/ArgumentResolver.php
-index d73d1d6..43bbe17 100644
+index 7e88df1..4285ba7 100644
 --- a/vendor/symfony/http-kernel/Controller/ArgumentResolver.php
 +++ b/vendor/symfony/http-kernel/Controller/ArgumentResolver.php
 @@ -48,7 +48,6 @@ final class ArgumentResolver implements ArgumentResolverInterface

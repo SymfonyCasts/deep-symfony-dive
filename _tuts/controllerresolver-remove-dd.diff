@@ -1,5 +1,5 @@
 diff --git a/vendor/symfony/http-kernel/Controller/ControllerResolver.php b/vendor/symfony/http-kernel/Controller/ControllerResolver.php
-index e7148e4..b5bd403 100644
+index 3d175f0..300ee02 100644
 --- a/vendor/symfony/http-kernel/Controller/ControllerResolver.php
 +++ b/vendor/symfony/http-kernel/Controller/ControllerResolver.php
 @@ -43,7 +43,6 @@ class ControllerResolver implements ControllerResolverInterface

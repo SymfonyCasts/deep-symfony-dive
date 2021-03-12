@@ -1,5 +1,5 @@
 diff --git a/vendor/symfony/http-kernel/EventListener/ErrorListener.php b/vendor/symfony/http-kernel/EventListener/ErrorListener.php
-index 26c361f..3d2d7a1 100644
+index f5cac76..900a83c 100644
 --- a/vendor/symfony/http-kernel/EventListener/ErrorListener.php
 +++ b/vendor/symfony/http-kernel/EventListener/ErrorListener.php
 @@ -53,6 +53,7 @@ class ErrorListener implements EventSubscriberInterface

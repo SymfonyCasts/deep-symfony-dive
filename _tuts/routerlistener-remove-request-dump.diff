@@ -1,8 +1,8 @@
 diff --git a/vendor/symfony/http-kernel/HttpKernel.php b/vendor/symfony/http-kernel/HttpKernel.php
-index 39289be..04b3183 100644
+index 95c9d04..8503313 100644
 --- a/vendor/symfony/http-kernel/HttpKernel.php
 +++ b/vendor/symfony/http-kernel/HttpKernel.php
-@@ -118,10 +118,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
+@@ -130,10 +130,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
  
          // request
          $event = new RequestEvent($this, $request, $type);
