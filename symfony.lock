@@ -44,6 +44,9 @@
     "doctrine/dbal": {
         "version": "v2.9.2"
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
         "recipe": {
@@ -188,6 +191,9 @@
     "league/html-to-markdown": {
         "version": "4.8.2"
     },
+    "league/mime-type-detection": {
+        "version": "1.7.0"
+    },
     "liip/imagine-bundle": {
         "version": "1.8",
         "recipe": {
@@ -282,6 +288,9 @@
             "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
         }
     },
+    "symfony/amqp-messenger": {
+        "version": "v5.2.4"
+    },
     "symfony/asset": {
         "version": "v4.1.11"
     },
@@ -333,6 +342,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v4.1.11"
+    },
+    "symfony/doctrine-messenger": {
+        "version": "v5.2.5"
     },
     "symfony/dom-crawler": {
         "version": "v4.3.5"
@@ -515,6 +527,9 @@
     },
     "symfony/property-info": {
         "version": "v4.1.11"
+    },
+    "symfony/redis-messenger": {
+        "version": "v5.2.4"
     },
     "symfony/routing": {
         "version": "4.2",
