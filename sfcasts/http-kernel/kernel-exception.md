@@ -19,7 +19,7 @@ priority.
 
 ## How Exceptions are Logged
 
-Find `logKernelException()` up on top. It's job is simple: log that
+Find `logKernelException()` up on top. Its job is simple: log that
 an exception was thrown. If you follow the `logException()` logic, you'll see
 that it logs at a different *level* based on the status code. We're going to talk
 more soon about how different exceptions *get* different status codes. But the
