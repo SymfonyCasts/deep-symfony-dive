@@ -5,6 +5,12 @@ Let's start from the *very* beginning of the request. When we load a page, the
 it all starts. So let's literally go through this file line-by-line and see what
 happens.
 
+***TIP
+If you start a new project in Symfony 5.3 or later, this file will look quite different thanks
+to the new `symfony/runtime` component. But, the same things are still happening behind
+the scenes.
+***
+
 ## index.php Bootstrapping
 
 The first thing it does is require this `config/bootstrap.php` file. For our purposes,
