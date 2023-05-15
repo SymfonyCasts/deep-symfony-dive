@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.4.0 || ^8.0.0",
+        "php": ">=8.1",
         "ext-iconv": "*",
         "antishov/doctrine-extensions-bundle": "^1.4",
         "aws/aws-sdk-php": "^3.87",
@@ -67,7 +67,7 @@
         },
         "sort-packages": true,
         "platform": {
-            "php": "7.4.0"
+            "php": "8.1.0"
         },
         "allow-plugins": {
             "symfony/flex": true
